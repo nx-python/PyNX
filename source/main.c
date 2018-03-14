@@ -56,7 +56,8 @@ int main(int argc, char *argv[])
 
 		u32 kDown = hidKeysDown(CONTROLLER_P1_AUTO);
 
-		if (kDown & KEY_PLUS) break; // break in order to return to hbmenu
+		/* Can't crash on exit if there's no exit button :P */
+		//if (kDown & KEY_PLUS) break; // break in order to return to hbmenu
 
 		gfxFlushBuffers();
 		gfxSwapBuffers();
