@@ -35,6 +35,10 @@ SOURCES		:=	source
 DATA		:=	data
 INCLUDES	:=	include
 EXEFS_SRC	:=	exefs_src
+APP_TITLEID	:=	Pynx
+APP_AUTHOR	:=	nx-python Authors, Python Software Foundation
+APP_VERSION	:=	0.1.0-alpha
+ICON		:=	pynx.jpg
 
 #---------------------------------------------------------------------------------
 # options for code generation
