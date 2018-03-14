@@ -50,9 +50,6 @@ PYFILE := py.tgz
 
 .PHONY: all clean
 
-
-all: distfPY
-
 distfPY: linkPY
 	@[ -d "$(OUTDIR)" ] || mkdir -p $(OUTDIR)
 	@[ -d "$(OUTDIR)/include" ] || mkdir -p $(OUTDIR)/include
@@ -69,13 +66,12 @@ distfPY: linkPY
 	touch distfPY
 
 linkPY: soospatchPY
-	cd $(PYDIR) && make LIBRARY="$(ANAME)" LDLIBRARY="$(ANAME)" $(ANAME) && cd .. && cp $(PYDIR)/$(ANAME) . && touch linkPY
+	cd $(PYDIR) && make $(MAKEFLAGS) LIBRARY="$(ANAME)" LDLIBRARY="$(ANAME)" $(ANAME) && cd .. && cp $(PYDIR)/$(ANAME) . && touch linkPY
 
 soospatchPY: compilePY
-	cp $(PYDIR)/pyconfig.h $(PYDIR)/pyconfig.h_old
-	cat $(PYDIR)/pyconfig.h_old | sed 's/^\([^#][^#]*#undef PY_FORMAT_LONG_LONG.*\)/\#define PY_FORMAT_LONG_LONG \"ll\" \1/' | sed 's/^\(#define socklen_t int\)/#undef socklen_t/' | sed 's/^\(#define socklen_t int\)/#undef socklen_t/' | sed 's/^\(struct servent {char*s_name;char**s_aliases;int s_port;char*s_proto;};\)/\/\/\1/' | sed 's/^\(struct protoent{char*p_name;char**p_aliases;int p_proto;};\)/\/\/\1/'  | sed 's/^\([^#][^#]*#undef HAVE_FSTATVFS.*\)/\#undef HAVE_FSTATVFS \1/' | sed 's/#define HAVE_\(LSTAT\|POLL\|UNAME\|WAIT3\|WAIT4\|WAITPID\|ALARM\|DLFCN_H\|DLOPEN\|DYNAMIC_LOADING\|GETC_UNLOCKED\|GETENTROPY\|GETITIMER\|GETPWENT\|MMAP\|OPENPTY\|PAUSE\|READLINK\|SETITIMER\|SIGACTION\|SIGINTERRUPT\|TERMIOS_H\|EXECV\|FORK\|GETEGID\|GETEUID\|GETGID\|GETPPID\|GETUID\|KILL\|PIPE\|POPEN\|SYSTEM\|TTYNAME\|SYMLINK\|UTIME_H\|FDATASYNC\|TZNAME\|DECL_TZNAME\|WORKING_TZSET\).*/#undef HAVE_\1/g' | sed 's/^#define HAVE_\(STATVFS\|SYS_STATVFS_H\|FDATASYNC\|SYMLINK\|EXECV\|FORK\|GETEGID\|GETEUID\|GETGID\|GETPPID\|GETUID\|KILL\|PIPE\|POPEN\|SYSTEM\|TTYNAME\|SYMLINK\|UTIME_H\|FDATASYNC\|TZNAME\|DECL_TZNAME\|WORKING_TZSET\).*/#undef HAVE_\1/' | sed 's/^\([^#][^#]*#undef HAVE_SELECT.*\)/\#define HAVE_SELECT \1/' | sed 's/^\([^#][^#]*#undef HAVE_GETADDRINFO.*\)/struct servent {char*s_name;char**s_aliases;int s_port;char*s_proto;};\nstruct protoent{char*p_name;char**p_aliases;int p_proto;};\n#define SOCK_RAW 3\n#define SOCK_SEQPACKET 5\n#define IN_CLASSA_NSHIFT 24 \1/g' >$(PYDIR)/pyconfig.h
+	cp python_config/pyconfig.h $(PYDIR)/pyconfig.h
 	cp $(PYDIR)/Modules/posixmodule.c $(PYDIR)/Modules/posixmodule.c_old
-	cat $(PYDIR)/Modules/posixmodule.c_old | sed 's/\(^[^rt]*time_t atime, mtime;.*\)/return NULL; \1/' | sed 's/\(^[^ri]*i = (int)umask(i);.*\)/return NULL; \1/' | sed 's/^\([^#][^#]*#undef HAVE_FSTATVFS.*\)/\#undef HAVE_FSTATVFS \1/' | sed 's/#define HAVE_\(EXECV\|FORK\|GETEGID\|GETEUID\|GETGID\|GETPPID\|GETUID\|KILL\|PIPE\|POPEN\|SYSTEM\|TTYNAME\|SYMLINK\|UTIME_H\|FDATASYNC\).*/#undef HAVE_\1/g' | sed 's/^#define HAVE_\(STATVFS\|SYS_STATVFS_H\|FDATASYNC\|FTIME\|SYMLINK\|EXECV\|FORK\|GETEGID\|GETEUID\|GETGID\|GETPPID\|GETUID\|KILL\|PIPE\|POPEN\|SYSTEM\|TTYNAME\|SYMLINK\|UTIME_H\|FDATASYNC\).*/#undef HAVE_\1/' >$(PYDIR)/Modules/posixmodule.c
+	cat $(PYDIR)/Modules/posixmodule.c_old | sed 's/access\\\(path, mode\\\)/1/' | sed 's/\(^[^rt]*time_t atime, mtime;.*\)/return NULL; \1/' | sed 's/\(^[^ri]*i = (int)umask(i);.*\)/return NULL; \1/' | sed 's/^\([^#][^#]*#undef HAVE_FSTATVFS.*\)/\#undef HAVE_FSTATVFS \1/' | sed 's/#define HAVE_\(EXECV\|FORK\|GETEGID\|GETEUID\|GETGID\|GETPPID\|GETUID\|KILL\|PIPE\|POPEN\|SYSTEM\|TTYNAME\|SYMLINK\|UTIME_H\|FDATASYNC\).*/#undef HAVE_\1/g' | sed 's/^#define HAVE_\(STATVFS\|SYS_STATVFS_H\|FDATASYNC\|FTIME\|SYMLINK\|EXECV\|FORK\|GETEGID\|GETEUID\|GETGID\|GETPPID\|GETUID\|KILL\|PIPE\|POPEN\|SYSTEM\|TTYNAME\|SYMLINK\|UTIME_H\|FDATASYNC\).*/#undef HAVE_\1/' >$(PYDIR)/Modules/posixmodule.c
 	cp $(PYDIR)/Modules/socketmodule.c $(PYDIR)/Modules/socketmodule.c_old
 	cat $(PYDIR)/Modules/socketmodule.c_old | sed 's/                             sizeof(addr->sa_data)/                             28/g' >$(PYDIR)/Modules/socketmodule.c
 	#cp $(PYDIR)/Objects/exceptions.c $(PYDIR)/Objects/exceptions.c_old
@@ -83,7 +79,7 @@ soospatchPY: compilePY
 	#cp $(PYDIR)/Python/pytime.c $(PYDIR)/Python/pytime.c_old
 	#cat $(PYDIR)/Python/pytime.c_old | sed 's/CLOCK_MONOTONIC/(clockid_t)4/g' >$(PYDIR)/Python/pytime.c
 	cp $(PYDIR)/Makefile $(PYDIR)/Makefile_old
-	cat $(PYDIR)/Makefile_old | sed 's/^\(Python\/\$(DYNLOADFILE) \\\)/#Python\/\$(DYNLOADFILE) \\/' >$(PYDIR)/Makefile
+	cat $(PYDIR)/Makefile_old | sed 's/Python\/$$(DYNLOADFILE) \\/\\/' >$(PYDIR)/Makefile
 	touch soospatchPY
 
 compilePY: extractedPY patchPY
@@ -96,7 +92,7 @@ patchPY:
 	echo ac_cv_file__dev_ptc=no >>$(PYDIR)/config.site
 	echo ac_cv_lib_dl_dlopen=no >>$(PYDIR)/config.site
 	cp $(PYDIR)/Modules/Setup.dist $(PYDIR)/Modules/Setup.dist_old
-	cat $(PYDIR)/Modules/Setup.dist_old | sed 's/^\([^#].* pwdmodule\.c.*\)/#\1/' | sed 's/^#\(array\|cmath\|math\|_struct\|operator\|_random\|_collections\|itertools\|strop\|unicodedata\|_io\|_csv\|_md5\|_sha\|_sha256\|_sha512\|binascii\|zlib\|select\|cStringIO\|time\|_functools\|_socket\|datetime\|_bisect\)\(.*\)/\1\2/' | sed "s#\\(zlib[^\$$]*\\)\$$(prefix)\\([^\$$]*\\)\$$(exec_prefix)\\(.*\\)#\1$(DEVKITPRO)/portlibs/armv8-a\2$(DEVKITPRO)/portlibs/armv8-a\3#" >$(PYDIR)/Modules/Setup.dist
+	cat $(PYDIR)/Modules/Setup.dist_old | sed 's/^\([^#].* pwdmodule\.c.*\)/#\1/' | sed 's/^#\(array\|cmath\|math\|_struct\|operator\|_random\|_collections\|itertools\|strop\|unicodedata\|_io\|_csv\|_md5\|_sha\|_sha256\|_sha512\|binascii\|select\|cStringIO\|time\|_functools\|_socket\|datetime\|_bisect\)\(.*\)/\1\2/' >$(PYDIR)/Modules/Setup.dist
 	
 	touch patchPY
 
@@ -106,7 +102,7 @@ extractedPY: $(PYFILE)
 $(PYFILE): 
 	wget -O "$(PYFILE)" "$(PYLINK)" || curl -Lo "$(PYFILE)" "$(PYLINK)"
 
-clean:
+cleanPY:
 	@rm -rf $(PYDIR) $(PYFILE) patchPY extractedPY compilePY linkPY distfPY soospatchPY libpython*.a
 
 
@@ -215,12 +211,12 @@ endif
 #---------------------------------------------------------------------------------
 all: $(BUILD)
 
-$(BUILD):
+$(BUILD): distfPY
 	@[ -d $@ ] || mkdir -p $@
 	@$(MAKE) --no-print-directory -C $(BUILD) -f $(CURDIR)/Makefile
 
 #---------------------------------------------------------------------------------
-clean:
+clean: cleanPY
 	@echo clean ...
 	@rm -fr $(BUILD) $(TARGET).pfs0 $(TARGET).nso $(TARGET).nro $(TARGET).nacp $(TARGET).elf
 
