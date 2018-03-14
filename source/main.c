@@ -35,9 +35,6 @@ int main(int argc, char *argv[])
 	PyObject *sysPath = PySys_GetObject("path");
 	PyObject *path = PyString_FromString("./");
 	PyList_Insert(sysPath, 0, path);
-	
-	/* sanity check */
-	PyRun_SimpleString("print 'Hello, Python 2.7 world!'\n");
 
 	FILE * mainpy = fopen(MAINPY, "r");
 
@@ -48,7 +45,7 @@ int main(int argc, char *argv[])
 		PyRun_AnyFile(mainpy, MAINPY);
 	}
 
-	Py_DECREF(path); /* are these decrefs needed? */
+	Py_DECREF(path); /* are these decrefs needed? Are they in the right place? */
 	Py_DECREF(sysPath);
 
 	Py_Finalize();
