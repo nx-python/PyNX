@@ -153,6 +153,7 @@ dist: $(BUILD)
 	mkdir -p $(LIBDIR)
 	unzip $(PY_BUILD)/nxpy2.7.12/python.zip -d $(LIBDIR)
 	cp $(OUTPUT).nro $(DIST_DIR)/$(TARGET).nro
+	cp examples/hello.py $(DIST_DIR)/main.py
 	cd $(BUILD) && zip -r $(TARGET)-$(APP_VERSION).zip $(TARGET)
 
 #---------------------------------------------------------------------------------
