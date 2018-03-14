@@ -31,6 +31,9 @@ include $(DEVKITPRO)/libnx/switch_rules
 #---------------------------------------------------------------------------------
 TARGET		:=	$(notdir $(CURDIR))
 BUILD		:=	build
+PY_BUILD	:= python_build
+DIST_DIR	:= $(BUILD)/$(TARGET)
+LIBDIR := $(DIST_DIR)/lib/python2.7
 SOURCES		:=	source
 DATA		:=	data
 INCLUDES	:=	include
@@ -38,7 +41,6 @@ EXEFS_SRC	:=	exefs_src
 APP_TITLEID	:=	Pynx
 APP_AUTHOR	:=	nx-python Authors, Python Software Foundation
 APP_VERSION	:=	0.1.0-alpha
-ICON		:=	pynx.jpg
 
 #---------------------------------------------------------------------------------
 # options for code generation
@@ -135,20 +137,29 @@ ifneq ($(APP_TITLEID),)
 	export NACPFLAGS += --titleid=$(APP_TITLEID)
 endif
 
-.PHONY: $(BUILD) clean all
+.PHONY: $(BUILD) clean distclean all
 
 #---------------------------------------------------------------------------------
 all: $(BUILD)
 
-$(BUILD):
+$(BUILD): cpython
 	@[ -d $@ ] || mkdir -p $@
 	@$(MAKE) --no-print-directory -C $(BUILD) -f $(CURDIR)/Makefile
+
+cpython:
+	make --no-print-directory $(MAKEFLAGS) -C $(PY_BUILD)
+
+dist: $(BUILD)
+	mkdir -p $(LIBDIR)
+	unzip $(PY_BUILD)/nxpy2.7.12/python.zip -d $(LIBDIR)
+	cp $(OUTPUT).nro $(DIST_DIR)/$(TARGET).nro
+	cd $(BUILD) && zip -r $(TARGET)-$(APP_VERSION).zip $(TARGET)
 
 #---------------------------------------------------------------------------------
 clean:
 	@echo clean ...
+	make -C $(PY_BUILD) clean
 	@rm -fr $(BUILD) $(TARGET).pfs0 $(TARGET).nso $(TARGET).nro $(TARGET).nacp $(TARGET).elf
-
 
 #---------------------------------------------------------------------------------
 else
