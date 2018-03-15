@@ -33,7 +33,7 @@ int main(int argc, char *argv[])
 	
 	/* set up import path */
 	PyObject *sysPath = PySys_GetObject("path");
-	PyObject *path = PyString_FromString("./");
+	PyObject *path = PyUnicode_FromString("./");
 	PyList_Insert(sysPath, 0, path);
 
 	FILE * mainpy = fopen(MAINPY, "r");
