@@ -204,10 +204,7 @@
 #define HAVE_DUP2 1
 
 /* Define to 1 if you have the `dup3' function. */
-#define HAVE_DUP3 1
-
-/* O_CLOEXEC is not supported, but ignoring it should be fine  here */
-#define O_CLOEXEC 0
+/* #define HAVE_DUP3 1 */ // original: #define HAVE_DUP3 1
 
 /* Defined when any dynamic module loading is enabled. */
 #undef HAVE_DYNAMIC_LOADING // original: #define HAVE_DYNAMIC_LOADING 1
@@ -246,7 +243,7 @@
 #define HAVE_FCHMOD 1
 
 /* Define to 1 if you have the `fchmodat' function. */
-#define HAVE_FCHMODAT 1
+/* #define HAVE_FCHMODAT 1 */ // original: #define HAVE_FCHMODAT 1
 
 /* Define to 1 if you have the `fchown' function. */
 /* #define HAVE_FCHOWN 1 */ // original: #define HAVE_FCHOWN 1
@@ -312,10 +309,10 @@
 /* #define HAVE_FUTIMENS 1 */ // original: #define HAVE_FUTIMENS 1
 
 /* Define to 1 if you have the `futimes' function. */
-#define HAVE_FUTIMES 1
+/* #define HAVE_FUTIMES 1 */ // original: #define HAVE_FUTIMES 1
 
 /* Define to 1 if you have the `futimesat' function. */
-#define HAVE_FUTIMESAT 1
+/* #define HAVE_FUTIMESAT 1 */ // original: #define HAVE_FUTIMESAT 1
 
 /* Define to 1 if you have the `gai_strerror' function. */
 #define HAVE_GAI_STRERROR 1
@@ -579,7 +576,7 @@
 /* #define HAVE_LSTAT 1 */ // original: #define HAVE_LSTAT 1
 
 /* Define to 1 if you have the `lutimes' function. */
-#define HAVE_LUTIMES 1
+/* #define HAVE_LUTIMES 1 */ // original: #define HAVE_LUTIMES 1
 
 /* Define this if you have the makedev macro. */
 /* #define HAVE_MAKEDEV 1 */ // original: #define HAVE_MAKEDEV 1
@@ -651,7 +648,7 @@
 #undef HAVE_PAUSE // original: #define HAVE_PAUSE 1
 
 /* Define to 1 if you have the `pipe2' function. */
-#define HAVE_PIPE2 1
+/* #define HAVE_PIPE2 1 */ // original: #define HAVE_PIPE2 1
 
 /* Define to 1 if you have the `plock' function. */
 /* #define HAVE_PLOCK 1 */ // original: #define HAVE_PLOCK 1
@@ -1187,7 +1184,7 @@
 /* #undef HAVE_WORKING_TZSET */
 
 /* Define to 1 if you have the `writev' function. */
-#define HAVE_WRITEV 1
+/* #define HAVE_WRITEV 1 */ // orignal: #define HAVE_WRITEV 1
 
 /* Define if the zlib library has inflateCopy */
 /* #undef HAVE_ZLIB_COPY */
