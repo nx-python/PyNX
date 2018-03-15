@@ -87,7 +87,7 @@ soospatchPY: compilePY
 	touch soospatchPY
 
 compilePY: extractedPY patchPY
-	cd $(PYDIR) && ./configure CC="$(CC)" CXX="$(CXX)" AS="$(AS)" AR="$(AR)" OBJCOPY="$(OBJCOPY)" STRIP="$(STRIP)" NM="$(NM)" RANLIB="$(RANLIB)" CFLAGS="$(CFLAGS)" CXXFLAGS="$(CXXFLAGS)" ASFLAGS="$(ASFLAGS)" LDFLAGS="$(LDFLAGS)" CONFIG_SITE="config.site" --disable-shared --without-threads --without-doc-strings --disable-ipv6 --host=aarch64-none-elf --build=`./config.guess` && cd .. && touch compilePY
+	cd $(PYDIR) && ./configure CC="$(CC)" CXX="$(CXX)" AS="$(AS)" AR="$(AR)" OBJCOPY="$(OBJCOPY)" STRIP="$(STRIP)" NM="$(NM)" RANLIB="$(RANLIB)" CFLAGS="$(CFLAGS)" CXXFLAGS="$(CXXFLAGS)" ASFLAGS="$(ASFLAGS)" LDFLAGS="$(LDFLAGS)" CONFIG_SITE="config.site" --disable-shared --without-threads --without-doc-strings --without-signal-module --disable-ipv6 --host=aarch64-none-elf --build=`./config.guess` && cd .. && touch compilePY
 
 patchPY:
 	cp $(PYDIR)/configure $(PYDIR)/configure_old
@@ -96,7 +96,7 @@ patchPY:
 	echo ac_cv_file__dev_ptc=no >>$(PYDIR)/config.site
 	echo ac_cv_lib_dl_dlopen=no >>$(PYDIR)/config.site
 	cp $(PYDIR)/Modules/Setup.dist $(PYDIR)/Modules/Setup.dist_old
-	cat $(PYDIR)/Modules/Setup.dist_old | sed 's/^\([^#].* pwdmodule\.c.*\)/#\1/' | sed 's/^#\(array\|cmath\|math\|_struct\|operator\|_random\|_collections\|itertools\|strop\|unicodedata\|_io\|_csv\|_md5\|_sha\|_sha256\|_sha512\|binascii\|select\|cStringIO\|time\|_functools\|_socket\|datetime\|_bisect\)\(.*\)/\1\2/' >$(PYDIR)/Modules/Setup.dist
+	cat $(PYDIR)/Modules/Setup.dist_old | sed 's/^\([^#].* pwdmodule\.c.*\)/#\1/' | sed 's/^#\(array\|cmath\|math\|_struct\|operator\|_random\|_collections\|itertools\|signal\|strop\|unicodedata\|_io\|_csv\|_md5\|_sha\|_sha256\|_sha512\|binascii\|select\|cStringIO\|time\|_functools\|_socket\|datetime\|_bisect\)\(.*\)/\1\2/' | sed "s#\\(zlib[^\$$]*\\)\$$(prefix)\\([^\$$]*\\)\$$(exec_prefix)\\(.*\\)#\1$(DEVKITPRO)/portlibs/switch\2$(DEVKITPRO)/portlibs/switch\3#" >$(PYDIR)/Modules/Setup.dist
 	
 	touch patchPY
 

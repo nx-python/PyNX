@@ -1159,10 +1159,10 @@
 /* #define HAVE_WAIT4 1 */ // original: #define HAVE_WAIT4 1
 
 /* Define to 1 if you have the `waitid' function. */
-#define HAVE_WAITID 1
+/* #define HAVE_WAITID 1 */ // original: #define HAVE_WAITID 1
 
 /* Define to 1 if you have the `waitpid' function. */
-/* #define HAVE_WAITPID 1 */ // original: #define HAVE_WAITPID 1
+#define HAVE_WAITPID 1
 
 /* Define if the compiler provides a wchar.h header file. */
 #define HAVE_WCHAR_H 1
