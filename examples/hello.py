@@ -1,4 +1,4 @@
-print """
+print("""
  _    _      _                          
 | |  | |    | |                         
 | |  | | ___| | ___ ___  _ __ ___   ___ 
@@ -22,4 +22,4 @@ print """
                __/ |             
               |___/              
 
-Replace this file (main.py) with your own to get started. """
+Replace this file (main.py) with your own to get started. """)
