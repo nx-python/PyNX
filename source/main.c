@@ -23,8 +23,7 @@ int main(int argc, char *argv[])
 	Py_NoUserSiteDirectory = 1;
 	//Py_VerboseFlag += 1;
 
-	/* not the real path, but this should make it look for modules in ./lib */
-	Py_SetProgramName(L"./bin/python");
+	Py_SetPythonHome(L"./");
 
 	Py_Initialize();
 	
