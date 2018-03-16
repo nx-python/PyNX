@@ -753,7 +753,7 @@
 /* #define HAVE_SCHED_GET_PRIORITY_MAX 1 */ // original: #define HAVE_SCHED_GET_PRIORITY_MAX 1
 
 /* Define to 1 if you have the <sched.h> header file. */
-#define HAVE_SCHED_H 1
+/* #define HAVE_SCHED_H 1 */ // original: #define HAVE_SCHED_H 1
 
 /* Define to 1 if you have the `sched_rr_get_interval' function. */
 /* #define HAVE_SCHED_RR_GET_INTERVAL 1 */ // original: #define HAVE_SCHED_RR_GET_INTERVAL 1
@@ -1147,7 +1147,7 @@
 /* #define HAVE_UTIMENSAT 1 */ // original: #define HAVE_UTIMENSAT 1
 
 /* Define to 1 if you have the `utimes' function. */
-#define HAVE_UTIMES 1
+/* #define HAVE_UTIMES 1 */ // original: #define HAVE_UTIMES 1
 
 /* Define to 1 if you have the <utime.h> header file. */
 /* #define HAVE_UTIME_H 1 */ // original: #define HAVE_UTIME_H 1
