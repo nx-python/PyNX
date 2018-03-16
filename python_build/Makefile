@@ -73,9 +73,10 @@ linkPY: soospatchPY
 	cd $(PYDIR) && make $(MAKEFLAGS) LIBRARY="$(ANAME)" LDLIBRARY="$(ANAME)" $(ANAME) && cd .. && cp $(PYDIR)/$(ANAME) . && touch linkPY
 
 soospatchPY: compilePY
-	cp $(PYCONFIG_DIR)/pyconfig.h $(PYDIR)/pyconfig.h
+	cp $(PYCONFIG_DIR)/pyconfig.h $(PYDIR)/
+	cp $(PYCONFIG_DIR)/intrcheck.c $(PYDIR)/Parser/
 	cp $(PYDIR)/Modules/posixmodule.c $(PYDIR)/Modules/posixmodule.c_old
-	cat $(PYDIR)/Modules/posixmodule.c_old | sed '1s/^/#include <sys/socket.h>/' | sed 's/access(path->narrow, mode)/1/' | sed 's/\(^[^rt]*time_t atime, mtime;.*\)/return NULL; \1/' | sed 's/\(^[^ri]*i = (int)umask(i);.*\)/return NULL; \1/' | sed 's/^\([^#][^#]*#undef HAVE_FSTATVFS.*\)/\#undef HAVE_FSTATVFS \1/' | sed 's/#define HAVE_\(EXECV\|FORK\|GETEGID\|GETEUID\|GETGID\|GETPPID\|GETUID\|KILL\|PIPE\|POPEN\|SYSTEM\|TTYNAME\|SYMLINK\|UTIME_H\|FDATASYNC\).*/#undef HAVE_\1/g' | sed 's/^#define HAVE_\(STATVFS\|SYS_STATVFS_H\|FDATASYNC\|FTIME\|SYMLINK\|EXECV\|FORK\|GETEGID\|GETEUID\|GETGID\|GETPPID\|GETUID\|KILL\|PIPE\|POPEN\|SYSTEM\|TTYNAME\|SYMLINK\|UTIME_H\|FDATASYNC\).*/#undef HAVE_\1/' >$(PYDIR)/Modules/posixmodule.c
+	cat $(PYDIR)/Modules/posixmodule.c_old | sed '1s/^/#include <sys\/socket.h>/' | sed 's/access(path->narrow, mode)/1/' | sed 's/\(^[^rt]*time_t atime, mtime;.*\)/return NULL; \1/' | sed 's/\(^[^ri]*i = (int)umask(i);.*\)/return NULL; \1/' | sed 's/^\([^#][^#]*#undef HAVE_FSTATVFS.*\)/\#undef HAVE_FSTATVFS \1/' | sed 's/#define HAVE_\(EXECV\|FORK\|GETEGID\|GETEUID\|GETGID\|GETPPID\|GETUID\|KILL\|PIPE\|POPEN\|SYSTEM\|TTYNAME\|SYMLINK\|UTIME_H\|FDATASYNC\).*/#undef HAVE_\1/g' | sed 's/^#define HAVE_\(STATVFS\|SYS_STATVFS_H\|FDATASYNC\|FTIME\|SYMLINK\|EXECV\|FORK\|GETEGID\|GETEUID\|GETGID\|GETPPID\|GETUID\|KILL\|PIPE\|POPEN\|SYSTEM\|TTYNAME\|SYMLINK\|UTIME_H\|FDATASYNC\).*/#undef HAVE_\1/' >$(PYDIR)/Modules/posixmodule.c
 	cp $(PYDIR)/Modules/socketmodule.c $(PYDIR)/Modules/socketmodule.c_old
 	cat $(PYDIR)/Modules/socketmodule.c_old | sed 's/send(s->sock_fd, buf, len, flags);/send(s->sock_fd, buf, len<4096?len:4096, flags);/g' | sed 's/                             sizeof(addr->sa_data)/                             28/g' >$(PYDIR)/Modules/socketmodule.c
 	cp $(PYDIR)/Objects/exceptions.c $(PYDIR)/Objects/exceptions.c_old
@@ -83,7 +84,7 @@ soospatchPY: compilePY
 	cp $(PYDIR)/Python/pytime.c $(PYDIR)/Python/pytime.c_old
 	cat $(PYDIR)/Python/pytime.c_old | sed 's/CLOCK_MONOTONIC/(clockid_t)4/g' >$(PYDIR)/Python/pytime.c
 	cp $(PYDIR)/Makefile $(PYDIR)/Makefile_old
-	cat $(PYDIR)/Makefile_old | sed 's/Parser\/intrcheck.o//' | sed 's/Python\/$$(DYNLOADFILE) \\/\\/' >$(PYDIR)/Makefile
+	cat $(PYDIR)/Makefile_old | sed 's/Python\/$$(DYNLOADFILE) \\/\\/' >$(PYDIR)/Makefile
 	touch soospatchPY
 
 compilePY: extractedPY patchPY
