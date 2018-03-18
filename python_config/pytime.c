@@ -564,6 +564,21 @@ pymonotonic(_PyTime_t *tp, _Py_clock_info_t *info, int raise)
     return pygettimeofday(tp, info, raise); /* should be good enough? */
 }
 
+_PyTime_t
+_PyTime_GetMonotonicClock(void)
+{
+    _PyTime_t t;
+    if (pymonotonic(&t, NULL, 0) < 0) {
+        /* should not happen, _PyTime_Init() checked that monotonic clock at
+           startup */
+        assert(0);
+
+        /* use a fixed value instead of a random value from the stack */
+        t = 0;
+    }
+    return t;
+}
+
 int
 _PyTime_GetMonotonicClockWithInfo(_PyTime_t *tp, _Py_clock_info_t *info)
 {
