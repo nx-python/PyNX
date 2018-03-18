@@ -760,6 +760,8 @@ get_inheritable(int fd, int raise)
     }
 
     return (flags & HANDLE_FLAG_INHERIT);
+#elif defined(SWITCH)
+    return 1; /* Always true */
 #else
     int flags;
 
@@ -796,6 +798,10 @@ set_inheritable(int fd, int inheritable, int raise, int *atomic_flag_works)
 #endif
     int flags;
     int res;
+#endif
+
+#ifdef SWITCH
+    return 0; /* Always succeed */
 #endif
 
     /* atomic_flag_works can only be used to make the file descriptor
