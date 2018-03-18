@@ -86,7 +86,7 @@ soospatchPY: compilePY
 	cp $(PYDIR)/Python/pytime.c $(PYDIR)/Python/pytime.c_old
 	cat $(PYDIR)/Python/pytime.c_old | sed 's/CLOCK_MONOTONIC/(clockid_t)4/g' >$(PYDIR)/Python/pytime.c
 	cp $(PYDIR)/Makefile $(PYDIR)/Makefile_old
-	cat $(PYDIR)/Makefile_old | sed 's/Python\/$$(DYNLOADFILE) \\/\\/' >$(PYDIR)/Makefile
+	cat $(PYDIR)/Makefile_old | sed 's/-Werror=declaration-after-statement//' | sed 's/Python\/$$(DYNLOADFILE) \\/\\/' >$(PYDIR)/Makefile
 	touch soospatchPY
 
 compilePY: extractedPY patchPY

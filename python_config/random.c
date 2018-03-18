@@ -17,10 +17,87 @@
 #  endif
 #endif
 
+#ifdef SWITCH
+#include "switch/types.h"
+#include "switch/result.h"
+#include "switch/ipc.h"
+#include "switch/services/sm.h"
+#endif
+
 #ifdef Py_DEBUG
 int _Py_HashSecret_Initialized = 0;
 #else
 static int _Py_HashSecret_Initialized = 0;
+#endif
+
+#ifdef SWITCH
+static Service g_csrngSrv;
+
+static int
+switch_urandom_init(int raise)
+{
+    Result rc;
+
+    rc = smGetService(&g_csrngSrv, "csrng");
+    if (R_SUCCEEDED(rc))
+        return 0;
+
+    if (raise)
+        PyErr_SetString(PyExc_RuntimeError,
+                        "SWITCH: Failed to get csrng service handle.");
+    else
+        Py_FatalError("SWITCH: Failed to get csrng service handle.");
+    return -1;
+}
+
+static int
+switch_urandom(unsigned char *buffer, Py_ssize_t size, int raise)
+{
+    IpcCommand c;
+    IpcParsedCommand r;
+    Result rc;
+
+    struct {
+        u64 magic;
+        u64 cmd_id;
+    } *raw;
+
+    struct {
+        u64 magic;
+        u64 result;
+    } *resp;
+
+    if (g_csrngSrv.handle == 0)
+        switch_urandom_init(raise);
+
+    ipcInitialize(&c);
+    ipcAddRecvBuffer(&c, buffer, size, 0);
+
+    raw = ipcPrepareHeader(&c, sizeof(*raw));
+    raw->magic = SFCI_MAGIC;
+    raw->cmd_id = 0;
+
+    rc = serviceIpcDispatch(&g_csrngSrv);
+
+    if (!R_SUCCEEDED(rc))
+        goto error;
+
+    ipcParse(&r);
+
+    resp = r.Raw;
+    rc = resp->result;
+
+    if (R_SUCCEEDED(rc))
+        return 0;
+
+error:
+    if (raise)
+        PyErr_SetString(PyExc_RuntimeError,
+                        "SWITCH: GetRandomBytes failed");
+    else
+        Py_FatalError("SWITCH: GetRandomBytes failed");
+    return -1;
+}
 #endif
 
 #ifdef MS_WINDOWS
@@ -418,6 +495,8 @@ _PyOS_URandom(void *buffer, Py_ssize_t size)
 
 #ifdef MS_WINDOWS
     return win32_urandom((unsigned char *)buffer, size, 1);
+#elif defined(SWITCH)
+    return switch_urandom(buffer, size, 0);
 #elif defined(PY_GETENTROPY)
     return py_getentropy(buffer, size, 0);
 #else
@@ -465,6 +544,8 @@ _PyRandom_Init(void)
     else {
 #ifdef MS_WINDOWS
         (void)win32_urandom(secret, secret_size, 0);
+#elif defined(SWITCH)
+        (void)switch_urandom(secret, secret_size, 0);
 #elif defined(PY_GETENTROPY)
         (void)py_getentropy(secret, secret_size, 1);
 #else
