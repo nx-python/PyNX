@@ -75,6 +75,7 @@ linkPY: soospatchPY
 soospatchPY: compilePY
 	cp $(PYCONFIG_DIR)/pyconfig.h $(PYDIR)/
 	cp $(PYCONFIG_DIR)/intrcheck.c $(PYDIR)/Parser/
+	cp $(PYCONFIG_DIR)/pytime.c $(PYDIR)/Python/
 	cp $(PYDIR)/Modules/posixmodule.c $(PYDIR)/Modules/posixmodule.c_old
 	cat $(PYDIR)/Modules/posixmodule.c_old | sed 's/return utime(path, time)/errno=ENOENT; return -1/g' | sed 's/define LSTAT lstat/define LSTAT stat/' | sed '1s/^/#include <sys\/socket.h>/' | sed 's/access(path->narrow, mode)/1/' | sed 's/\(^[^rt]*time_t atime, mtime;.*\)/return NULL; \1/' | sed 's/\(^[^ri]*int i = (int)umask(mask);.*\)/int i=0; return NULL;/' | sed 's/^\([^#][^#]*#undef HAVE_FSTATVFS.*\)/\#undef HAVE_FSTATVFS \1/' | sed 's/#define HAVE_\(EXECV\|FORK\|GETEGID\|GETEUID\|GETGID\|GETPPID\|GETUID\|KILL\|PIPE\|POPEN\|SYSTEM\|TTYNAME\|SYMLINK\|UTIME_H\|FDATASYNC\).*/#undef HAVE_\1/g' | sed 's/^#define HAVE_\(STATVFS\|SYS_STATVFS_H\|FDATASYNC\|FTIME\|SYMLINK\|EXECV\|FORK\|GETEGID\|GETEUID\|GETGID\|GETPPID\|GETUID\|KILL\|PIPE\|POPEN\|SYSTEM\|TTYNAME\|SYMLINK\|UTIME_H\|FDATASYNC\).*/#undef HAVE_\1/' >$(PYDIR)/Modules/posixmodule.c
 	cp $(PYDIR)/Modules/socketmodule.c $(PYDIR)/Modules/socketmodule.c_old
