@@ -65,7 +65,7 @@ distfPY: linkPY
 	cp $(PYDIR)/Lib/socket.py $(PYDIR)/Lib/socket.pyX
 	cat $(PYDIR)/Lib/socket.pyX | sed 's/'"'"'getpeername'"'"', //g' >$(PYDIR)/Lib/socket.py
 	rm $(PYDIR)/Lib/socket.pyX
-	cd $(PYDIR)/Lib && ls *.py -1 | xargs zip ../../$(OUTDIR)/python.zip && find json/ encodings/ -type f | xargs zip ../../$(OUTDIR)/python.zip
+	cd $(PYDIR)/Lib && ls *.py -1 | xargs zip ../../$(OUTDIR)/python.zip && find json/ encodings/ html/ http/ test/ urllib/ collections/ email/ sqlite3/ logging/ xml/ -type f | xargs zip ../../$(OUTDIR)/python.zip
 
 	touch distfPY
 
