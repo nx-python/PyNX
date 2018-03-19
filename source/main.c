@@ -23,8 +23,7 @@ int main(int argc, char *argv[])
 	Py_NoUserSiteDirectory = 1;
 	//Py_VerboseFlag += 1;
 
-	/* not the real path, but this should make it look for modules in ./lib */
-	Py_SetProgramName("./bin/python");
+	Py_SetPythonHome(L"./");
 
 	Py_Initialize();
 	
@@ -33,7 +32,7 @@ int main(int argc, char *argv[])
 	
 	/* set up import path */
 	PyObject *sysPath = PySys_GetObject("path");
-	PyObject *path = PyString_FromString("./");
+	PyObject *path = PyUnicode_FromString("./");
 	PyList_Insert(sysPath, 0, path);
 
 	FILE * mainpy = fopen(MAINPY, "r");
@@ -56,8 +55,7 @@ int main(int argc, char *argv[])
 
 		u32 kDown = hidKeysDown(CONTROLLER_P1_AUTO);
 
-		/* Can't crash on exit if there's no exit button :P */
-		//if (kDown & KEY_PLUS) break; // break in order to return to hbmenu
+		if (kDown & KEY_PLUS) break; // break in order to return to hbmenu
 
 		gfxFlushBuffers();
 		gfxSwapBuffers();

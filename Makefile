@@ -33,14 +33,14 @@ TARGET		:=	$(notdir $(CURDIR))
 BUILD		:=	build
 PY_BUILD	:= python_build
 DIST_DIR	:= $(BUILD)/$(TARGET)
-LIBDIR := $(DIST_DIR)/lib/python2.7
+LIBDIR := $(DIST_DIR)/lib/python3.5
 SOURCES		:=	source
 DATA		:=	data
 INCLUDES	:=	include
 EXEFS_SRC	:=	exefs_src
 APP_TITLEID	:=	Pynx
 APP_AUTHOR	:=	nx-python Authors, Python Software Foundation
-APP_VERSION	:=	0.1.0-alpha
+APP_VERSION	:=	0.2.0-alpha
 
 #---------------------------------------------------------------------------------
 # options for code generation
@@ -57,13 +57,13 @@ CXXFLAGS	:= $(CFLAGS) -fno-rtti -fno-exceptions -std=gnu++11
 ASFLAGS	:=	-g $(ARCH)
 LDFLAGS	=	-specs=$(DEVKITPRO)/libnx/switch.specs -g $(ARCH) -Wl,-Map,$(notdir $*.map)
 
-LIBS	:= -lpython2.7 -lm -lnx
+LIBS	:= -lpython3.5 -lm -lnx
 
 #---------------------------------------------------------------------------------
 # list of directories containing libraries, this must be the top level containing
 # include and lib
 #---------------------------------------------------------------------------------
-NXPY := $(CURDIR)/python_build/nxpy2.7.12
+NXPY := $(CURDIR)/python_build/nxpy3.5.3
 LIBDIRS	:= $(PORTLIBS) $(LIBNX) $(NXPY)
 
 
@@ -151,7 +151,7 @@ cpython:
 
 dist: $(BUILD)
 	mkdir -p $(LIBDIR)
-	unzip $(PY_BUILD)/nxpy2.7.12/python.zip -d $(LIBDIR)
+	unzip $(PY_BUILD)/nxpy3.5.3/python.zip -d $(LIBDIR)
 	cp $(OUTPUT).{nro,nacp} $(DIST_DIR)/
 	cp examples/hello.py $(DIST_DIR)/main.py
 	cd $(BUILD) && zip -r $(TARGET)-$(APP_VERSION).zip $(TARGET)
