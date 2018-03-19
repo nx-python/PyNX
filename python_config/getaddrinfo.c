@@ -545,6 +545,33 @@ get_addr(hostname, af, res, pai, port0)
     top = NULL;
     sentinel.ai_next = NULL;
     cur = &sentinel;
+
+#ifdef SWITCH // XXX dirty hack XXX
+    struct sockaddr_in *saddr;
+
+    if (!(af == AF_INET || af == AF_UNSPEC))
+        return EAI_NODATA;
+
+    saddr = calloc(1, sizeof(*saddr));
+    saddr->sin_family = AF_INET;
+    saddr->sin_port = port0;
+
+    /* XXX libnx inet_pton is currently broken, we will ignore the return value for now... */
+    if (inet_pton(AF_INET, hostname, &(saddr->sin_addr)) != 1 && 0) {
+        free(saddr);
+        error = EAI_NODATA;
+        goto free;
+    }
+
+    top = calloc(1, sizeof(*top));
+    top->ai_family = AF_INET;
+    top->ai_addrlen = sizeof(*saddr);
+    top->ai_addr = (struct sockaddr *) saddr;
+
+    *res = top;
+    return SUCCESS;
+#endif
+
 #ifdef ENABLE_IPV6
     if (af == AF_UNSPEC) {
         hp = getipnodebyname(hostname, AF_INET6,
