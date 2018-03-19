@@ -334,7 +334,7 @@
 #define HAVE_GCC_UINT128_T 1
 
 /* Define if you have the getaddrinfo function. */
-#define HAVE_GETADDRINFO 1
+#undef HAVE_GETADDRINFO
 
 // TODO clarify what these are
 #define SOCK_RAW 3
@@ -380,7 +380,7 @@
 /* #define HAVE_GETLOGIN 1 */ // original: #define HAVE_GETLOGIN 1
 
 /* Define to 1 if you have the `getnameinfo' function. */
-#define HAVE_GETNAMEINFO 1
+#undef HAVE_GETNAMEINFO
 
 /* Define if you have the 'getpagesize' function. */
 #define HAVE_GETPAGESIZE 1
