@@ -573,7 +573,7 @@
 #define HAVE_LONG_LONG 1
 
 /* Define to 1 if you have the `lstat' function. */
-/* #define HAVE_LSTAT 1 */ // original: #define HAVE_LSTAT 1
+#define HAVE_LSTAT 1 /* We don't really have lstat, but sed replaces it with stat */
 
 /* Define to 1 if you have the `lutimes' function. */
 /* #define HAVE_LUTIMES 1 */ // original: #define HAVE_LUTIMES 1
