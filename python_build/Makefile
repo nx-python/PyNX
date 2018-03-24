@@ -49,6 +49,8 @@ OUTDIR := nxpy$(PYVERS)
 PYDIR  := Python-$(PYVERS)
 PYLINK := https://www.python.org/ftp/python/$(PYVERS)/Python-$(PYVERS).tgz
 PYFILE := py.tgz
+_NXFILE := _nx.zip
+_NX_VERSION := 174dfd099fcdb6dab8e521a2816e15f638de0436
 
 .PHONY: all clean
 
@@ -72,6 +74,11 @@ distfPY: linkPY
 linkPY: soospatchPY
 	cd $(PYDIR) && make $(MAKEFLAGS) LIBRARY="$(ANAME)" LDLIBRARY="$(ANAME)" $(ANAME) && cd .. && cp $(PYDIR)/$(ANAME) . && touch linkPY
 
+clone_NX:
+	wget -O $(_NXFILE) "https://github.com/nx-python/_nx/archive/$(_NX_VERSION).zip"
+	unzip -o $(_NXFILE)
+	touch clone_NX
+
 soospatchPY: compilePY
 	cp $(PYCONFIG_DIR)/pyconfig.h $(PYDIR)/
 	cp $(PYCONFIG_DIR)/intrcheck.c $(PYDIR)/Parser/
@@ -94,14 +101,15 @@ soospatchPY: compilePY
 compilePY: extractedPY patchPY
 	cd $(PYDIR) && ./configure CC="$(CC)" CXX="$(CXX)" AS="$(AS)" AR="$(AR)" OBJCOPY="$(OBJCOPY)" STRIP="$(STRIP)" NM="$(NM)" RANLIB="$(RANLIB)" CFLAGS="$(CFLAGS)" CXXFLAGS="$(CXXFLAGS)" ASFLAGS="$(ASFLAGS)" LDFLAGS="$(LDFLAGS)" CONFIG_SITE="config.site" --disable-shared --without-threads --without-doc-strings --without-signal-module --disable-ipv6 --host=aarch64-none-elf --build=`./config.guess` && cd .. && touch compilePY
 
-patchPY:
+patchPY: clone_NX
 	cp $(PYDIR)/configure $(PYDIR)/configure_old
 	cat $(PYDIR)/configure_old | sed 's/	\*\-\*\-linux\*)/	\*\-\*\-linux\*\|aarch64\-none\-elf)/g' >$(PYDIR)/configure
 	echo ac_cv_file__dev_ptmx=no >$(PYDIR)/config.site
 	echo ac_cv_file__dev_ptc=no >>$(PYDIR)/config.site
 	echo ac_cv_lib_dl_dlopen=no >>$(PYDIR)/config.site
 	cp $(PYDIR)/Modules/Setup.dist $(PYDIR)/Modules/Setup.dist_old
-	cat $(PYDIR)/Modules/Setup.dist_old | sed 's/^\([^#].* pwdmodule\.c.*\)/#\1/' | sed 's/^#\(array\|cmath\|math\|_struct\|operator\|_random\|_collections\|itertools\|signal\|strop\|unicodedata\|_io\|_csv\|_md5\|_sha\|_sha256\|_sha512\|binascii\|select\|cStringIO\|time\|_functools\|_socket\|datetime\|_bisect\)\(.*\)/\1\2/' | sed "s#\\(zlib[^\$$]*\\)\$$(prefix)\\([^\$$]*\\)\$$(exec_prefix)\\(.*\\)#\1$(DEVKITPRO)/portlibs/switch\2$(DEVKITPRO)/portlibs/switch\3#" >$(PYDIR)/Modules/Setup.dist
+	cat $(PYDIR)/Modules/Setup.dist_old | sed -e '$$a_nx -I$$(srcdir)/Modules/_nx _nx/_nxmodule.c' | sed 's/^\([^#].* pwdmodule\.c.*\)/#\1/' | sed 's/^#\(array\|cmath\|math\|_struct\|operator\|_random\|_collections\|itertools\|signal\|strop\|unicodedata\|_io\|_csv\|_md5\|_sha\|_sha256\|_sha512\|binascii\|select\|cStringIO\|time\|_functools\|_socket\|datetime\|_bisect\)\(.*\)/\1\2/' | sed "s#\\(zlib[^\$$]*\\)\$$(prefix)\\([^\$$]*\\)\$$(exec_prefix)\\(.*\\)#\1$(DEVKITPRO)/portlibs/switch\2$(DEVKITPRO)/portlibs/switch\3#" >$(PYDIR)/Modules/Setup.dist
+	cp -r _nx-*/_nx $(PYDIR)/Modules/
 	
 	touch patchPY
 
@@ -112,4 +120,4 @@ $(PYFILE):
 	wget -O "$(PYFILE)" "$(PYLINK)" || curl -Lo "$(PYFILE)" "$(PYLINK)"
 
 clean:
-	@rm -rf $(PYDIR) $(PYFILE) patchPY extractedPY compilePY linkPY distfPY soospatchPY libpython*.a
+	@rm -rf $(PYDIR) $(PYFILE) $(_NXFILE) patchPY extractedPY compilePY linkPY distfPY soospatchPY clone_NX _nx-* libpython*.a
