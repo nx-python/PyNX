@@ -152,6 +152,7 @@ cpython:
 dist: $(BUILD)
 	mkdir -p $(LIBDIR)
 	unzip $(PY_BUILD)/nxpy3.5.3/python.zip -d $(LIBDIR)
+	cp -r $(PY_BUILD)/nx-*/nx $(LIBDIR)
 	cp $(OUTPUT).{nro,nacp} $(DIST_DIR)/
 	cp examples/hello.py $(DIST_DIR)/main.py
 	cd $(BUILD) && zip -r $(TARGET)-$(APP_VERSION).zip $(TARGET)
