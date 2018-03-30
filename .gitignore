@@ -1,4 +1,4 @@
 python_build/*
 !python_build/Makefile
 build/
-Pynx.*
+PyNX.*
