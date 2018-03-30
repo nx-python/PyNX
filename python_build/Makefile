@@ -50,9 +50,9 @@ PYDIR  := Python-$(PYVERS)
 PYLINK := https://www.python.org/ftp/python/$(PYVERS)/Python-$(PYVERS).tgz
 PYFILE := py.tgz
 _NXFILE := _nx.zip
-_NX_VERSION := 174dfd099fcdb6dab8e521a2816e15f638de0436
-NXPKGFILE := nxpkg.zip
-NXPKG_VERSION := fe22f98eed557c0efadd2a52d2b0542ef1d246c1
+_NXVERS := 174dfd099fcdb6dab8e521a2816e15f638de0436
+NXFILE := nx.zip
+NXVERS := c1069b999d54bf72abce8d993479ea8dc53af45b
 
 .PHONY: all clean
 
@@ -76,12 +76,12 @@ distfPY: linkPY
 linkPY: soospatchPY
 	cd $(PYDIR) && make $(MAKEFLAGS) LIBRARY="$(ANAME)" LDLIBRARY="$(ANAME)" $(ANAME) && cd .. && cp $(PYDIR)/$(ANAME) . && touch linkPY
 
-clone_NX:
-	wget -O $(_NXFILE) "https://github.com/nx-python/_nx/archive/$(_NX_VERSION).zip"
-	wget -O $(NXPKGFILE) "https://github.com/nx-python/nx/archive/$(NXPKG_VERSION).zip"
+cloneNX:
+	wget -O $(_NXFILE) "https://github.com/nx-python/_nx/archive/$(_NXVERS).zip"
+	wget -O $(NXFILE) "https://github.com/nx-python/nx/archive/$(NXVERS).zip"
 	unzip -o $(_NXFILE)
-	unzip -o $(NXPKGFILE)
-	touch clone_NX
+	unzip -o $(NXFILE)
+	touch cloneNX
 
 soospatchPY: compilePY
 	cp $(PYCONFIG_DIR)/pyconfig.h $(PYDIR)/
@@ -105,7 +105,7 @@ soospatchPY: compilePY
 compilePY: extractedPY patchPY
 	cd $(PYDIR) && ./configure CC="$(CC)" CXX="$(CXX)" AS="$(AS)" AR="$(AR)" OBJCOPY="$(OBJCOPY)" STRIP="$(STRIP)" NM="$(NM)" RANLIB="$(RANLIB)" CFLAGS="$(CFLAGS)" CXXFLAGS="$(CXXFLAGS)" ASFLAGS="$(ASFLAGS)" LDFLAGS="$(LDFLAGS)" CONFIG_SITE="config.site" --disable-shared --without-threads --without-doc-strings --without-signal-module --disable-ipv6 --host=aarch64-none-elf --build=`./config.guess` && cd .. && touch compilePY
 
-patchPY: clone_NX
+patchPY: cloneNX
 	cp $(PYDIR)/configure $(PYDIR)/configure_old
 	cat $(PYDIR)/configure_old | sed 's/	\*\-\*\-linux\*)/	\*\-\*\-linux\*\|aarch64\-none\-elf)/g' >$(PYDIR)/configure
 	echo ac_cv_file__dev_ptmx=no >$(PYDIR)/config.site
@@ -124,4 +124,4 @@ $(PYFILE):
 	wget -O "$(PYFILE)" "$(PYLINK)" || curl -Lo "$(PYFILE)" "$(PYLINK)"
 
 clean:
-	@rm -rf $(PYDIR) $(PYFILE) $(_NXFILE) $(NXPKGFILE) patchPY extractedPY compilePY linkPY distfPY soospatchPY clone_NX _nx-* nx-* libpython*.a
+	@rm -rf $(PYDIR) $(PYFILE) $(_NXFILE) $(NXFILE) patchPY extractedPY compilePY linkPY distfPY soospatchPY cloneNX _nx-* nx-* libpython*.a

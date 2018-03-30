@@ -31,16 +31,16 @@ include $(DEVKITPRO)/libnx/switch_rules
 #---------------------------------------------------------------------------------
 TARGET		:=	$(notdir $(CURDIR))
 BUILD		:=	build
-PY_BUILD	:= python_build
-DIST_DIR	:= $(BUILD)/$(TARGET)
-LIBDIR := $(DIST_DIR)/lib/python3.5
+PY_BUILD	:=	python_build
+DIST_DIR	:=	$(BUILD)/$(TARGET)
+LIBDIR		:=	$(DIST_DIR)/lib/python3.5
 SOURCES		:=	source
 DATA		:=	data
 INCLUDES	:=	include
 EXEFS_SRC	:=	exefs_src
-APP_TITLEID	:=	Pynx
-APP_AUTHOR	:=	nx-python Authors, Python Software Foundation
-APP_VERSION	:=	0.2.0-alpha
+APP_TITLE	:=	PyNX
+APP_AUTHOR	:=	nx-python, Python Software Foundation
+APP_VERSION	:=	0.3.0-alpha
 
 #---------------------------------------------------------------------------------
 # options for code generation
@@ -153,7 +153,8 @@ dist: $(BUILD)
 	mkdir -p $(LIBDIR)
 	unzip $(PY_BUILD)/nxpy3.5.3/python.zip -d $(LIBDIR)
 	cp -r $(PY_BUILD)/nx-*/nx $(LIBDIR)
-	cp $(OUTPUT).{nro,nacp} $(DIST_DIR)/
+	cp $(OUTPUT).nro $(DIST_DIR)/
+	cp $(OUTPUT).nacp $(DIST_DIR)/
 	cp examples/hello.py $(DIST_DIR)/main.py
 	cd $(BUILD) && zip -r $(TARGET)-$(APP_VERSION).zip $(TARGET)
 
