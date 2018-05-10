@@ -50,9 +50,9 @@ PYDIR  := Python-$(PYVERS)
 PYLINK := https://www.python.org/ftp/python/$(PYVERS)/Python-$(PYVERS).tgz
 PYFILE := py.tgz
 _NXFILE := _nx.zip
-_NXVERS := 174dfd099fcdb6dab8e521a2816e15f638de0436
+_NXVERS := c4eebe97a4e7ba952ebffd7012b34a768ae96dd4
 NXFILE := nx.zip
-NXVERS := 4d3e57854f6adc6848af222f9f7582e30c7cf6b1
+NXVERS := a969b53211e745c3697e700524f1c54183e7f53f
 
 .PHONY: all clean
 

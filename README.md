@@ -1,6 +1,6 @@
 # PyNX
 
-**nx-python** is an ecosystem for developing and running Python homebrew applications on the Nintendo Switch. **PyNX** serves as the entry point to running Python apps on your Switch. It is a homebrew app that contains a port of the CPython interpreter and allows you to run Python applications from the Homebrew Menu. Just name your application `main.py` and place it next to the `PyNX.nro`, and it will be executed as soon as you launch PyNX from the Homebrew Menu. Currently, **only Python 2.7 is supported**.
+**nx-python** is an ecosystem for developing and running Python homebrew applications on the Nintendo Switch. **PyNX** serves as the entry point to running Python apps on your Switch. It is a homebrew app that contains a port of the CPython interpreter and allows you to run Python applications from the Homebrew Menu. Just name your application `main.py` and place it next to the `PyNX.nro`, and it will be executed as soon as you launch PyNX from the Homebrew Menu. Currently, **Python 3.5 is supported**.
 
 ## Running PyNX on your Switch
 
