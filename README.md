@@ -8,7 +8,11 @@ You don't have to compile PyNX, you can [just grab a release build](https://gith
 
 ## Compiling PyNX
 
-Compile PyNX using `make`. This will create a `PyNX` directory and build everything in there. Compiling might take a while, grab a coffee or whatever in the meantime if you like. Afterwards, create a distributable version using `make dist`. It will appear in the `build` directory.
+Compile PyNX using `make`. This will create a `build` directory and build everything in there. Compiling might take a while, grab a coffee or whatever in the meantime if you like. Afterwards, create a distributable version using `make dist`. It will appear in the `build` directory.
+
+## Documentation
+
+Documentation can be found on [ReadTheDocs](https://nx-python.readthedocs.io/en/latest/).
 
 ## Having an issue?
 

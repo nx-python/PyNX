@@ -40,7 +40,7 @@ INCLUDES	:=	include
 EXEFS_SRC	:=	exefs_src
 APP_TITLE	:=	PyNX
 APP_AUTHOR	:=	nx-python, Python Software Foundation
-APP_VERSION	:=	0.3.2-alpha
+APP_VERSION	:=	0.4.0-alpha
 
 #---------------------------------------------------------------------------------
 # options for code generation
