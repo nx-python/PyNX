@@ -31,8 +31,13 @@ int main(int argc, char *argv[])
 	printf("Python %s on %s\n", Py_GetVersion(), Py_GetPlatform());
 	
 	/* set up import path */
+	char cwd[PATH_MAX];
+	getcwd(cwd, sizeof(cwd));
+	/* Strip the leading sdmc: to workaround a bug somewhere... */
+	char *stripped_cwd = strchr(cwd, '/');
+	if (stripped_cwd == NULL) stripped_cwd = cwd;
 	PyObject *sysPath = PySys_GetObject("path");
-	PyObject *path = PyUnicode_FromString("./");
+	PyObject *path = PyUnicode_FromString(cwd);
 	PyList_Insert(sysPath, 0, path);
 
 	FILE * mainpy = fopen(MAINPY, "r");
