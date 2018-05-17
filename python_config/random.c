@@ -20,7 +20,7 @@
 #ifdef SWITCH
 #include "switch/types.h"
 #include "switch/result.h"
-#include "switch/ipc.h"
+#include "switch/kernel/ipc.h"
 #include "switch/services/sm.h"
 #endif
 
