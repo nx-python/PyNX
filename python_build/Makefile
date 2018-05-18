@@ -52,7 +52,7 @@ PYFILE := py.tgz
 _NXFILE := _nx.zip
 _NXVERS := 5baa28b0ce6ab2c8390fd85cfc36e1086f2cede9
 NXFILE := nx.zip
-NXVERS := d20e94403bcc81c23b2997fd29aedc6ee81c0648
+NXVERS := 9b9d2dc61d6b0ecf9839ae470a26d5089d1102c1
 
 .PHONY: all clean
 
