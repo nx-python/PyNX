@@ -155,7 +155,6 @@ dist: $(BUILD)
 	cp -r $(PY_BUILD)/nx-*/nx $(LIBDIR)
 	cp $(OUTPUT).nro $(DIST_DIR)/
 	cp $(OUTPUT).nacp $(DIST_DIR)/
-	cp examples/hello.py $(DIST_DIR)/main.py
 	cd $(BUILD) && zip -r $(TARGET)-$(APP_VERSION).zip $(TARGET)
 
 #---------------------------------------------------------------------------------
