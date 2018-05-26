@@ -36,10 +36,12 @@ def confirmation_prompt(program_name: str):
 
 
 if __name__ == '__main__':
+    os.chdir(os.pardir)
+
     while True:
         clear_terminal()
-        dirs = ["../"] + glob("*/")
-        scripts = glob("*.py")
+        dirs = [os.pardir + '/'] + glob('*/')
+        scripts = glob('*.py')
         if os.getcwd() == PYNX_DIR_PATH and MAIN_PY in scripts:
             scripts.remove(MAIN_PY)
         for _dir in dirs:
@@ -52,7 +54,7 @@ if __name__ == '__main__':
         clear_terminal()
         if selected in dirs:
             os.chdir(selected)
-            if os.path.isfile(MAIN_PY) and not selected == '../' and not os.getcwd() == PYNX_DIR_PATH:
+            if os.path.isfile(MAIN_PY) and not selected == os.pardir + '/' and not os.getcwd() == PYNX_DIR_PATH:
                 response = confirmation_prompt(selected)
                 clear_terminal()
                 if response is True:
