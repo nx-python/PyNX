@@ -29,7 +29,7 @@ include $(DEVKITPRO)/libnx/switch_rules
 #     - icon.jpg
 #     - <libnx folder>/default_icon.jpg
 #---------------------------------------------------------------------------------
-TARGET		:=	$(notdir $(CURDIR))
+TARGET		:=	PyNX
 BUILD		:=	build
 PY_BUILD	:=	python_build
 DIST_DIR	:=	$(BUILD)/$(TARGET)
@@ -38,9 +38,9 @@ SOURCES		:=	source
 DATA		:=	data
 INCLUDES	:=	include
 EXEFS_SRC	:=	exefs_src
-APP_TITLE	:=	PyNX
+APP_TITLE	:=	$(TARGET)
 APP_AUTHOR	:=	nx-python, Python Software Foundation
-APP_VERSION	:=	0.4.1-alpha
+APP_VERSION	:=	0.5.0-alpha
 
 #---------------------------------------------------------------------------------
 # options for code generation
@@ -155,6 +155,7 @@ dist: $(BUILD)
 	cp -r $(PY_BUILD)/nx-*/nx $(LIBDIR)
 	cp $(OUTPUT).nro $(DIST_DIR)/
 	cp $(OUTPUT).nacp $(DIST_DIR)/
+	cp main.py $(DIST_DIR)/
 	cd $(BUILD) && zip -r $(TARGET)-$(APP_VERSION).zip $(TARGET)
 
 #---------------------------------------------------------------------------------
