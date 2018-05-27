@@ -46,7 +46,7 @@ if __name__ == '__main__':
             scripts.remove(MAIN_PY)
         for _dir in dirs:
             if os.path.isfile(os.path.join(_dir, MAIN_PY)):
-                dirs.replace(_dir, _dir[:-1])
+                dirs[dirs.index(_dir)] = _dir[:-1]
         listing = dirs + scripts
         file_menu = AnsiMenu(listing)
         print("Listing for {}:".format(os.getcwd()))
