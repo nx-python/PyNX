@@ -23,21 +23,23 @@ int main(int argc, char *argv[])
 	Py_NoUserSiteDirectory = 1;
 	//Py_VerboseFlag += 1;
 
-	Py_SetPythonHome(L"./");
-
-	Py_Initialize();
-	
-	/* Print some info */
-	printf("Python %s on %s\n", Py_GetVersion(), Py_GetPlatform());
-	
-	/* set up import path */
+	/* Calculate absolute home dir */
 	char cwd[PATH_MAX];
 	getcwd(cwd, sizeof(cwd));
 	/* Strip the leading sdmc: to workaround a bug somewhere... */
 	char *stripped_cwd = strchr(cwd, '/');
 	if (stripped_cwd == NULL) stripped_cwd = cwd;
+
+	Py_SetPythonHome(Py_DecodeLocale(stripped_cwd, NULL));
+
+	Py_Initialize();
+
+	/* Print some info */
+	printf("Python %s on %s\n", Py_GetVersion(), Py_GetPlatform());
+	
+	/* set up import path */
 	PyObject *sysPath = PySys_GetObject("path");
-	PyObject *path = PyUnicode_FromString(cwd);
+	PyObject *path = PyUnicode_FromString(stripped_cwd);
 	PyList_Insert(sysPath, 0, path);
 
 	FILE * mainpy = fopen(MAINPY, "r");
