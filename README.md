@@ -10,6 +10,9 @@ You don't have to compile PyNX, you can [just grab a release build](https://gith
 
 Compile PyNX using `make`. This will create a `build` directory and build everything in there. Compiling might take a while, grab a coffee or whatever in the meantime if you like. Afterwards, create a distributable version using `make dist`. It will appear in the `build` directory.
 
+### Mac OS
+You will have to install gnu-sed first(`brew install gnu-sed`).
+
 ## Documentation
 
 Documentation can be found on [ReadTheDocs](https://nx-python.readthedocs.io/en/latest/).
