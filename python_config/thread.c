@@ -91,7 +91,6 @@ static size_t _pythread_stacksize = 0;
 #include "thread_nt.h"
 #endif
 
-
 #ifdef SWITCH
 #define PYTHREAD_NAME "nx"
 #include "thread_nx.h"

@@ -102,6 +102,7 @@ soospatchPY: compilePY
 	cp $(PYCONFIG_DIR)/thread_nx.h $(PYDIR)/Python/
 	cp $(PYCONFIG_DIR)/condvar.h $(PYDIR)/Python/
 	cp $(PYCONFIG_DIR)/pylifecycle.c $(PYDIR)/Python/
+	cp $(PYCONFIG_DIR)/ceval_gil.h $(PYDIR)/Python/
 	cp $(PYCONFIG_DIR)/getaddrinfo.c $(PYDIR)/Modules/
 	cp $(PYDIR)/Modules/posixmodule.c $(PYDIR)/Modules/posixmodule.c_old
 	cat $(PYDIR)/Modules/posixmodule.c_old | $(SED) 's/return utime(path, time)/errno=ENOENT; return -1/g' | $(SED) 's/define LSTAT lstat/define LSTAT stat/' | $(SED) '1s/^/#include <sys\/socket.h>/' | $(SED) 's/access(path->narrow, mode)/1/' | $(SED) 's/\(^[^rt]*time_t atime, mtime;.*\)/return NULL; \1/' | $(SED) 's/\(^[^ri]*int i = (int)umask(mask);.*\)/int i=0; return NULL;/' | $(SED) 's/^\([^#][^#]*#undef HAVE_FSTATVFS.*\)/\#undef HAVE_FSTATVFS \1/' | $(SED) 's/#define HAVE_\(EXECV\|FORK\|GETEGID\|GETEUID\|GETGID\|GETPPID\|GETUID\|KILL\|PIPE\|POPEN\|SYSTEM\|TTYNAME\|SYMLINK\|UTIME_H\|FDATASYNC\).*/#undef HAVE_\1/g' | $(SED) 's/^#define HAVE_\(STATVFS\|SYS_STATVFS_H\|FDATASYNC\|FTIME\|SYMLINK\|EXECV\|FORK\|GETEGID\|GETEUID\|GETGID\|GETPPID\|GETUID\|KILL\|PIPE\|POPEN\|SYSTEM\|TTYNAME\|SYMLINK\|UTIME_H\|FDATASYNC\).*/#undef HAVE_\1/' >$(PYDIR)/Modules/posixmodule.c

@@ -43,20 +43,18 @@ static inline ThreadVars* getThreadVars(void) {
 static
 void _noop(void)
 {
-    printf("_noop function called\n");
+    // printf("_noop function called\n");
 }
 
 
 static void
 PyThread__init_thread(void)
 {
-    printf("PyThread_init_new_thread called\n");
     Thread thread1;
     threadCreate(&thread1, (void *) _noop, NULL, THREAD_STACK_SIZE, THREAD_PRIORITY, THREAD_CPU_ID);
     threadStart(&thread1);
     threadWaitForExit(&thread1);
     threadClose(&thread1);
-    printf("PyThread_init_new_thread exited\n");
 }
 
 /*
@@ -70,14 +68,13 @@ typedef struct {
 
 static
 void _wrapperFunc(_wrapperArgs * args) {
-    printf("_wrapperFunc called -> %p, %p\n", args->func, args->arg);
+    // printf("_wrapperFunc called -> %p, %p\n", args->func, args->arg);
     args->func(args->arg);
 }
 
 long
 PyThread_start_new_thread(void (*func)(void *), void *arg)
 {
-    printf("PyThread_start_new_thread called\n");
     dprintf(("PyThread_start_new_thread called\n"));
     if (!initialized)
         PyThread_init_thread();
@@ -86,13 +83,12 @@ PyThread_start_new_thread(void (*func)(void *), void *arg)
     wargs.arg = arg;
     wargs.func = func;
 
-    // Thread * t = malloc(sizeof(Thread));
     Thread * t = (Thread *)PyMem_RawMalloc(sizeof(Thread));
     int rc = threadCreate(t, (ThreadFunc)_wrapperFunc, &wargs, THREAD_STACK_SIZE, THREAD_PRIORITY, THREAD_CPU_ID);
-    printf("PyThread thread created -> %d\n", rc);
+    // printf("PyThread thread created -> %d\n", rc);
     if (rc < 0) return -1;
     rc = threadStart(t);
-    printf("PyThread thread started -> %p, %d\n", t, rc);
+    // printf("PyThread thread started -> %p, %d\n", t, rc);
 
     return rc < 0 ? -1 : 0;
 }
@@ -103,21 +99,20 @@ PyThread_get_thread_ident(void)
     if (!initialized)
         PyThread_init_thread();
     Thread * t = getThreadVars()->thread_ptr;
-    if (t != NULL) printf("PyThread_get_thread_ident called -> %p\n", t);
-    return (long)t;
+    // if (t != NULL) printf("PyThread_get_thread_ident called -> %p\n", t);
+    return (long)t + 1;
 }
 
 void
 PyThread_exit_thread(void)
 {
-    printf("PyThread_exit_thread called\n");
     dprintf(("PyThread_exit_thread called\n"));
     if (!initialized)
         exit(0);
     
+    // TODO: fix this
     // Thread * t = getThreadVars()->thread_ptr;
     // threadClose(t);
-    // free(t);
     // PyMem_RawFree((void *)t);
     svcExitThread();
 }
@@ -128,32 +123,25 @@ PyThread_exit_thread(void)
 
 typedef struct {
     char locked;
-    CondVar * cv;
-    Mutex * mutex;
+    CondVar cv;
+    Mutex mutex;
 } _thread_lock;
 
 PyThread_type_lock
 PyThread_allocate_lock(void)
 {
-    // dprintf(("PyThread_allocate_lock called\n"));
-    // printf("PyThread_allocate_lock called\n");
+    dprintf(("PyThread_allocate_lock called\n"));
     if (!initialized)
         PyThread_init_thread();
 
     _thread_lock * lock = (_thread_lock *)PyMem_RawMalloc(sizeof(_thread_lock));
     lock->locked = 0;
 
-    lock->mutex = (Mutex *)PyMem_RawMalloc(sizeof(Mutex));
-    mutexInit(lock->mutex);
+    mutexInit(&(lock->mutex));
 
-    Mutex * m = (Mutex *)PyMem_RawMalloc(sizeof(Mutex));
-    mutexInit(m);
-
-    lock->cv = (CondVar *)PyMem_RawMalloc(sizeof(CondVar));
-    condvarInit(lock->cv, m);
+    condvarInit(&(lock->cv), &(lock->mutex));
 
     dprintf(("PyThread_allocate_lock() -> %p\n", lock));
-    // printf("PyThread_allocate_lock() -> %p\n", lock);
     return (PyThread_type_lock) lock;
 }
 
@@ -164,14 +152,10 @@ PyThread_free_lock(PyThread_type_lock lock)
 
 
     dprintf(("PyThread_free_lock(%p) called\n", lock));
-    // printf("PyThread_free_lock(%p) called\n", lock);
 
     if (!thelock)
         return;
     
-    PyMem_RawFree((void *)thelock->mutex);
-    PyMem_RawFree((void *)thelock->cv->mutex);
-    PyMem_RawFree((void *)thelock->cv);
     PyMem_RawFree((void *)thelock);
 }
 
@@ -190,10 +174,15 @@ PyThread_acquire_lock_timed(PyThread_type_lock lock, PY_TIMEOUT_T microseconds,
     _thread_lock * thelock = (_thread_lock *)lock;
     dprintf(("PyThread_acquire_lock_timed(%p, %lld, %d) called\n", 
             lock, microseconds, intr_flag));
-    // printf("PyThread_acquire_lock_timed(%p, %lld, %d) called\n", 
-    //         lock, microseconds, intr_flag);
 
-    mutexLock(thelock->mutex);
+    if (thelock->locked == 1 && microseconds == 0) {
+        success = PY_LOCK_FAILURE;
+        dprintf(("PyThread_acquire_lock_timed(%p, %lld, %d) -> %d\n",
+            lock, microseconds, intr_flag, success));
+        return success;
+    }
+
+    mutexLock(&(thelock->mutex));
     if (thelock->locked == 0) {
         success = PY_LOCK_ACQUIRED;
     } else if (microseconds == 0) {
@@ -204,12 +193,12 @@ PyThread_acquire_lock_timed(PyThread_type_lock lock, PY_TIMEOUT_T microseconds,
         success = PY_LOCK_FAILURE;
         while (success == PY_LOCK_FAILURE) {
             if (microseconds > 0) {
-                status = condvarWaitTimeout(thelock->cv, ns);
+                status = condvarWaitTimeout(&(thelock->cv), ns);
                 if (status == 0xEA01) // on timeout
                     break;
             }
             else {
-                status = condvarWait(thelock->cv);
+                status = condvarWait(&(thelock->cv));
             }
 
             if (intr_flag && status == 0 && thelock->locked) {
@@ -218,7 +207,7 @@ PyThread_acquire_lock_timed(PyThread_type_lock lock, PY_TIMEOUT_T microseconds,
                  * it and retry.  */
                 success = PY_LOCK_INTR;
                 break;
-            } else if (status == 0 && !thelock->locked) {
+            } else if (!thelock->locked) {
                 success = PY_LOCK_ACQUIRED;
             } else {
                 success = PY_LOCK_FAILURE;
@@ -229,12 +218,10 @@ PyThread_acquire_lock_timed(PyThread_type_lock lock, PY_TIMEOUT_T microseconds,
     if (success == PY_LOCK_ACQUIRED) {
         thelock->locked = 1;
     }
-    mutexUnlock(thelock->mutex);
+    mutexUnlock(&(thelock->mutex));
 
     dprintf(("PyThread_acquire_lock_timed(%p, %lld, %d) -> %d\n",
 	     lock, microseconds, intr_flag, success));
-    // printf("PyThread_acquire_lock_timed(%p, %lld, %d) -> %d\n",
-	//      lock, microseconds, intr_flag, success);
     return success;
 }
 
@@ -245,11 +232,11 @@ PyThread_release_lock(PyThread_type_lock lock)
     dprintf(("PyThread_release_lock(%p) called\n", lock));
     // printf("PyThread_release_lock(%p) called\n", lock);
 
-    mutexLock(thelock->mutex);
+    mutexLock(&(thelock->mutex));
+    dprintf(("PyThread_release_lock(%p) mutex locked\n", lock));
     thelock->locked = 0;
-
-    condvarWakeAll(thelock->cv);
-    mutexUnlock(thelock->mutex);
+    condvarWakeOne(&(thelock->cv));
+    mutexUnlock(&(thelock->mutex));
 }
 
 /* The following are only needed if native TLS support exists */
