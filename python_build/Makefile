@@ -126,7 +126,7 @@ patchPY: cloneNX
 	echo ac_cv_file__dev_ptc=no >>$(PYDIR)/config.site
 	echo ac_cv_lib_dl_dlopen=no >>$(PYDIR)/config.site
 	cp $(PYDIR)/Modules/Setup.dist $(PYDIR)/Modules/Setup.dist_old
-	cat $(PYDIR)/Modules/Setup.dist_old | $(SED) -e '$$a_nx -I$$(srcdir)/Modules/_nx _nx/_nxmodule.c hashtable.c' | $(SED) 's/^\([^#].* pwdmodule\.c.*\)/#\1/' | $(SED) 's/^#\(array\|cmath\|math\|_struct\|operator\|_random\|_collections\|itertools\|signal\|strop\|unicodedata\|_io\|_csv\|_md5\|_sha\|_sha256\|_sha512\|binascii\|select\|cStringIO\|time\|_functools\|_socket\|datetime\|_bisect\)\(.*\)/\1\2/' | $(SED) "s#\\(zlib[^\$$]*\\)\$$(prefix)\\([^\$$]*\\)\$$(exec_prefix)\\(.*\\)#\1$(DEVKITPRO)/portlibs/switch\2$(DEVKITPRO)/portlibs/switch\3#" | $(SED) "s/_tracemalloc/# _tracemalloc/" >$(PYDIR)/Modules/Setup.dist
+	cat $(PYDIR)/Modules/Setup.dist_old | $(SED) -e '$$a_nx -I$$(srcdir)/Modules/_nx _nx/_nxmodule.c hashtable.c' | $(SED) 's/^\([^#].* pwdmodule\.c.*\)/#\1/' | $(SED) 's/^#\(array\|cmath\|math\|_struct\|operator\|_random\|_collections\|itertools\|signal\|strop\|unicodedata\|_io\|_csv\|_md5\|_sha\|_sha256\|_sha512\|binascii\|select\|cStringIO\|time\|_functools\|_socket\|datetime\|_bisect\|zlib\)\(.*\)/\1\2/' | $(SED) "s#\\(zlib[^\$$]*\\)\$$(prefix)\\([^\$$]*\\)\$$(exec_prefix)\\(.*\\)#\1$(DEVKITPRO)/portlibs/switch\2$(DEVKITPRO)/portlibs/switch\3#" | $(SED) "s/_tracemalloc/# _tracemalloc/" >$(PYDIR)/Modules/Setup.dist
 	cp -r _nx-*/_nx $(PYDIR)/Modules/
 	
 	touch patchPY
