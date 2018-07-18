@@ -40,7 +40,7 @@ INCLUDES	:=	include
 EXEFS_SRC	:=	exefs_src
 APP_TITLE	:=	$(TARGET)
 APP_AUTHOR	:=	nx-python, Python Software Foundation
-APP_VERSION	:=	0.5.1-alpha
+APP_VERSION	:=	0.5.2-alpha
 
 #---------------------------------------------------------------------------------
 # options for code generation
