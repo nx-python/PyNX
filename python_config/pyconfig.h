@@ -335,7 +335,7 @@
 #define HAVE_GCC_UINT128_T 1
 
 /* Define if you have the getaddrinfo function. */
-#undef HAVE_GETADDRINFO
+#define HAVE_GETADDRINFO
 
 // TODO clarify what these are
 #define SOCK_RAW 3
