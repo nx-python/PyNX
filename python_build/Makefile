@@ -60,6 +60,8 @@ _NXFILE := _nx.zip
 _NXVERS := 5baa28b0ce6ab2c8390fd85cfc36e1086f2cede9
 NXFILE := nx.zip
 NXVERS := e0fb67e90e945c6f214f16a804ae1ca7fa211d95
+IMGUIFILE := imgui.zip
+IMGUIVERS := b93f16ca8f376cc13ec0a56c86940a23a99156b9
 
 
 
@@ -88,8 +90,10 @@ linkPY: soospatchPY
 cloneNX:
 	wget -O $(_NXFILE) "https://github.com/nx-python/_nx/archive/$(_NXVERS).zip"
 	wget -O $(NXFILE) "https://github.com/nx-python/nx/archive/$(NXVERS).zip"
+	wget -O $(IMGUIFILE) "https://github.com/elnardu/switch-imgui/archive/$(IMGUIVERS).zip"
 	unzip -o $(_NXFILE)
 	unzip -o $(NXFILE)
+	unzip -o $(IMGUIFILE)
 	touch cloneNX
 
 soospatchPY: compilePY
@@ -130,7 +134,9 @@ patchPY: cloneNX extractedPY
 	echo ac_cv_lib_dl_dlopen=no >>$(PYDIR)/config.site
 	cp $(PYDIR)/Modules/Setup.dist $(PYDIR)/Modules/Setup.dist_old
 	cat $(PYDIR)/Modules/Setup.dist_old | $(SED) -e '$$a_nx -I$$(srcdir)/Modules/_nx _nx/_nxmodule.c hashtable.c' | $(SED) 's/^\([^#].* pwdmodule\.c.*\)/#\1/' | $(SED) 's/^#\(array\|cmath\|math\|_struct\|operator\|_random\|_collections\|itertools\|signal\|strop\|unicodedata\|_io\|_csv\|_md5\|_sha\|_sha256\|_sha512\|binascii\|select\|cStringIO\|time\|_functools\|_socket\|datetime\|_bisect\|zlib\)\(.*\)/\1\2/' | $(SED) "s#\\(zlib[^\$$]*\\)\$$(prefix)\\([^\$$]*\\)\$$(exec_prefix)\\(.*\\)#\1$(DEVKITPRO)/portlibs/switch\2$(DEVKITPRO)/portlibs/switch\3#" | $(SED) "s/_tracemalloc/# _tracemalloc/" >$(PYDIR)/Modules/Setup.dist
+	cat switch-imgui-*/setup.txt >> $(PYDIR)/Modules/Setup.dist
 	cp -r _nx-*/_nx $(PYDIR)/Modules/
+	cp -r switch-imgui-*/dist/modules/* $(PYDIR)/Modules/
 	
 	touch patchPY
 
@@ -141,4 +147,4 @@ $(PYFILE):
 	wget -O "$(PYFILE)" "$(PYLINK)" || curl -Lo "$(PYFILE)" "$(PYLINK)"
 
 clean:
-	@rm -rf $(PYDIR) $(PYFILE) $(_NXFILE) $(NXFILE) patchPY extractedPY compilePY linkPY distfPY soospatchPY cloneNX _nx-* nx-* libpython*.a
+	@rm -rf $(PYDIR) $(PYFILE) $(_NXFILE) $(NXFILE) patchPY extractedPY compilePY linkPY distfPY soospatchPY cloneNX _nx-* nx-* switch-imgui-* libpython*.a
