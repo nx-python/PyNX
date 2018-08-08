@@ -93,6 +93,10 @@ cloneNX:
 	touch cloneNX
 
 soospatchPY: compilePY
+	# See https://bugs.python.org/issue23644
+	cp $(PYCONFIG_DIR)/pyatomic.h $(PYDIR)/Include
+	cp $(PYCONFIG_DIR)/pystate.h $(PYDIR)/Include
+
 	cp $(PYCONFIG_DIR)/pyconfig.h $(PYDIR)/
 	cp $(PYCONFIG_DIR)/intrcheck.c $(PYDIR)/Parser/
 	cp $(PYCONFIG_DIR)/pytime.c $(PYDIR)/Python/
