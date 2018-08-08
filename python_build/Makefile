@@ -90,7 +90,7 @@ linkPY: soospatchPY
 cloneNX:
 	wget -O $(_NXFILE) "https://github.com/nx-python/_nx/archive/$(_NXVERS).zip"
 	wget -O $(NXFILE) "https://github.com/nx-python/nx/archive/$(NXVERS).zip"
-	wget -O $(IMGUIFILE) "https://github.com/elnardu/switch-imgui/archive/$(IMGUIVERS).zip"
+	wget -O $(IMGUIFILE) "https://github.com/nx-python/switch-imgui/archive/$(IMGUIVERS).zip"
 	unzip -o $(_NXFILE)
 	unzip -o $(NXFILE)
 	unzip -o $(IMGUIFILE)
