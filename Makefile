@@ -149,7 +149,7 @@ dist: $(BUILD)
 	cp -r $(PY_BUILD)/switch-imgui-*/dist/python/* $(LIBDIR)
 	cp $(OUTPUT).nro $(DIST_DIR)/
 	cp $(OUTPUT).nacp $(DIST_DIR)/
-	cp main.py $(DIST_DIR)/
+	cp $(PY_BUILD)/switch-imgui-*/main.py $(DIST_DIR)/
 	cd $(BUILD) && zip -r $(TARGET)-$(APP_VERSION).zip $(TARGET)
 
 #---------------------------------------------------------------------------------
