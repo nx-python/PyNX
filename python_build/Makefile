@@ -119,10 +119,10 @@ soospatchPY: compilePY
 	cat $(PYDIR)/Makefile_old | $(SED) 's/-Werror=declaration-after-statement//' | $(SED) 's/Python\/$$(DYNLOADFILE) \\/\\/' >$(PYDIR)/Makefile
 	touch soospatchPY
 
-compilePY: extractedPY patchPY
+compilePY: patchPY
 	cd $(PYDIR) && ./configure CC="$(CC)" CXX="$(CXX)" AS="$(AS)" AR="$(AR)" OBJCOPY="$(OBJCOPY)" STRIP="$(STRIP)" NM="$(NM)" RANLIB="$(RANLIB)" CFLAGS="$(CFLAGS)" CXXFLAGS="$(CXXFLAGS)" ASFLAGS="$(ASFLAGS)" LDFLAGS="$(LDFLAGS)" CONFIG_SITE="config.site" --disable-shared --with-threads --without-signal-module --disable-ipv6 -host=aarch64-none-elf --build=`./config.guess` && cd .. && touch compilePY
 
-patchPY: cloneNX
+patchPY: cloneNX extractedPY
 	cp $(PYDIR)/configure $(PYDIR)/configure_old
 	cat $(PYDIR)/configure_old | $(SED) 's/	\*\-\*\-linux\*)/	\*\-\*\-linux\*\|aarch64\-none\-elf)/g' >$(PYDIR)/configure
 	echo ac_cv_file__dev_ptmx=no >$(PYDIR)/config.site
