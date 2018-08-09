@@ -61,7 +61,7 @@ _NXVERS := 5baa28b0ce6ab2c8390fd85cfc36e1086f2cede9
 NXFILE := nx.zip
 NXVERS := e0fb67e90e945c6f214f16a804ae1ca7fa211d95
 IMGUIFILE := imgui.zip
-IMGUIVERS := b93f16ca8f376cc13ec0a56c86940a23a99156b9
+IMGUIVERS := b4e26056141604119ba272ac8fcdda712187a1a9
 
 
 
@@ -90,7 +90,7 @@ linkPY: soospatchPY
 cloneNX:
 	wget -O $(_NXFILE) "https://github.com/nx-python/_nx/archive/$(_NXVERS).zip"
 	wget -O $(NXFILE) "https://github.com/nx-python/nx/archive/$(NXVERS).zip"
-	wget -O $(IMGUIFILE) "https://github.com/nx-python/switch-imgui/archive/$(IMGUIVERS).zip"
+	wget -O $(IMGUIFILE) "https://github.com/nx-python/imgui-switch/archive/$(IMGUIVERS).zip"
 	unzip -o $(_NXFILE)
 	unzip -o $(NXFILE)
 	unzip -o $(IMGUIFILE)
