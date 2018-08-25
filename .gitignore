@@ -2,3 +2,7 @@ python_build/*
 !python_build/Makefile
 build/
 PyNX.*
+.cproject
+.idea
+.project
+.settings

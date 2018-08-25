@@ -150,8 +150,8 @@ dist: $(BUILD)
 	cp $(OUTPUT).nro $(DIST_DIR)/
 	cp $(OUTPUT).nacp $(DIST_DIR)/
 	cp $(CURDIR)/python_config/main.py $(DIST_DIR)/
-	cd $(BUILD) && zip -r $(TARGET)-$(APP_VERSION).zip $(TARGET)
 	cp $(CURDIR)/python_config/terminal.py  $(CURDIR)/build/PyNX/lib/python3.5
+	cd $(BUILD) && zip -r $(TARGET)-$(APP_VERSION).zip $(TARGET)
 
 #---------------------------------------------------------------------------------
 clean:

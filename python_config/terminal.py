@@ -41,7 +41,7 @@ class Terminal():
         return "Terminal for the switch, made by PuffDip"
 
     def __init__(self):
-        logging.basicConfig(filename='src/terminal.log', format='%(levelname)s:%(message)s', level=logging.ERROR)
+        logging.basicConfig(filename='terminal.log', format='%(levelname)s:%(message)s', level=logging.ERROR)
         # (r, g, b)
         self.KEY_COLOR = self.colorToFloat((230, 126, 34))
         self.KEY_FUNC_COLOR = self.colorToFloat((196, 107, 29))
