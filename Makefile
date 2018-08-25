@@ -157,7 +157,7 @@ dist: $(BUILD)
 	unzip -o $(TERMINAL)
 	cp $(CURDIR)/$(TERMIFOL)/PyNX/main.py $(DIST_DIR)/
 	cp $(CURDIR)/$(TERMIFOL)/PyNX/lib/python3.5/terminal.py  $(CURDIR)/build/PyNX/lib/python3.5
-	rm -rf $(CURDIR)/$(TERMIFOL)
+	rm -rf $(CURDIR)/$(TERMIFOL) && rm -rf $(CURDIR)/$(TERMINAL)
 	cd $(BUILD) && zip -r $(TARGET)-$(APP_VERSION).zip $(TARGET)
 
 #---------------------------------------------------------------------------------
