@@ -135,6 +135,10 @@ endif
 #---------------------------------------------------------------------------------
 all: $(BUILD)
 
+TERMINAL := PyNX_Terminal.zip
+TERMIVER := e56589f9e70cb23ec3aa8a140afeb9a3de9e4def
+TERMIFOL := PyNX_Terminal-$(TERMIVER)
+
 $(BUILD): cpython
 	@[ -d $@ ] || mkdir -p $@
 	@$(MAKE) --no-print-directory -C $(BUILD) -f $(CURDIR)/Makefile
@@ -149,7 +153,11 @@ dist: $(BUILD)
 	cp -r $(PY_BUILD)/imgui-switch-*/dist/python/* $(LIBDIR)
 	cp $(OUTPUT).nro $(DIST_DIR)/
 	cp $(OUTPUT).nacp $(DIST_DIR)/
-	cp $(PY_BUILD)/imgui-switch-*/main.py $(DIST_DIR)/
+	wget -O $(CURDIR)/$(TERMINAL) "https://github.com/Annihilator708/PyNX_Terminal/archive/$(TERMIVER).zip"
+	unzip -o $(TERMINAL)
+	cp $(CURDIR)/$(TERMIFOL)/PyNX/main.py $(DIST_DIR)/
+	cp $(CURDIR)/$(TERMIFOL)/PyNX/lib/python3.5/terminal.py  $(CURDIR)/build/PyNX/lib/python3.5
+	rm -rf $(CURDIR)/$(TERMIFOL) && rm -rf $(CURDIR)/$(TERMINAL)
 	cd $(BUILD) && zip -r $(TARGET)-$(APP_VERSION).zip $(TARGET)
 
 #---------------------------------------------------------------------------------
