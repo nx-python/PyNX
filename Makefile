@@ -136,7 +136,7 @@ endif
 all: $(BUILD)
 
 TERMINAL := PyNX_Terminal.zip
-TERMIVER := da356e568a3522dafa5622004e0cd91710354e0b
+TERMIVER := e56589f9e70cb23ec3aa8a140afeb9a3de9e4def
 TERMIFOL := PyNX_Terminal-$(TERMIVER)
 
 $(BUILD): cpython
