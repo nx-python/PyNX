@@ -59,7 +59,7 @@ PYFILE := py.tgz
 _NXFILE := _nx.zip
 _NXVERS := 5baa28b0ce6ab2c8390fd85cfc36e1086f2cede9
 NXFILE := nx.zip
-NXVERS := e0fb67e90e945c6f214f16a804ae1ca7fa211d95
+NXVERS := 8ecd6ea46e620cfad4732a9dd7d1ee228309cb1b
 IMGUIFILE := imgui.zip
 IMGUIVERS := 179360f82770850f1af2f03c631d01a9ff839b57
 
