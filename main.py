@@ -6,7 +6,7 @@ import runpy
 import sys
 import time
 from imgui.integrations.nx import NXRenderer
-from nx.utils import clear_terminal
+from nx.utils import clear_terminal, Terminal
 import traceback
 
 sys.argv = [""]  # workaround needed for runpy
@@ -21,6 +21,7 @@ def colorToFloat(t):
 FOLDER_COLOR = colorToFloat((230, 126, 34))
 PYFILE_COLOR = colorToFloat((46, 204, 113))
 FILE_COLOR = colorToFloat((41, 128, 185))
+APP_COLOR = colorToFloat((24, 86, 31))
 
 ERROR = ""
 
@@ -55,6 +56,8 @@ def main():
         imgui.begin("", 
             flags=imgui.WINDOW_NO_TITLE_BAR | imgui.WINDOW_NO_RESIZE | imgui.WINDOW_NO_MOVE | imgui.WINDOW_NO_SAVED_SETTINGS
         )
+        imgui.begin_group()
+
         imgui.text("Welcome to PyNX!")
         imgui.text("Touch is supported")
         imgui.text("Current dir: " + os.getcwd())
@@ -92,6 +95,21 @@ def main():
                 run_python_module(e)
             
             imgui.pop_style_color(1)
+        
+        imgui.end_group()
+        # end of file picker
+
+        imgui.same_line(spacing=50)
+        imgui.begin_group()
+        imgui.text("Utils:")
+
+        imgui.push_style_color(imgui.COLOR_BUTTON, *APP_COLOR)
+        if imgui.button("Interactive Python", width=200, height=60):
+            t = Terminal()
+            t.main()
+        imgui.pop_style_color(1)
+
+        imgui.end_group()
 
         
         imgui.end()
