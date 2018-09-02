@@ -655,10 +655,10 @@
 /* #define HAVE_PLOCK 1 */ // original: #define HAVE_PLOCK 1
 
 /* Define to 1 if you have the `poll' function. */
-/* #define HAVE_POLL 1 */ // original: #define HAVE_POLL 1
+#define HAVE_POLL 1 // original: #define HAVE_POLL 1
 
 /* Define to 1 if you have the <poll.h> header file. */
-/* #undef HAVE_POLL_H */ // original: #define HAVE_POLL_H 1
+#define HAVE_POLL_H 1 // original: #define HAVE_POLL_H 1
 
 /* Define to 1 if you have the `posix_fadvise' function. */
 /* #define HAVE_POSIX_FADVISE 1 */ // original: #define HAVE_POSIX_FADVISE 1
