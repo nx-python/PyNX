@@ -57,14 +57,14 @@ CXXFLAGS	:= $(CFLAGS) -fno-rtti -fno-exceptions -std=gnu++11
 ASFLAGS	:=	-g $(ARCH)
 LDFLAGS	=	-specs=$(DEVKITPRO)/libnx/switch.specs -g $(ARCH) -Wl,-Map,$(notdir $*.map)
 
-LIBS	:= -lpython3.5 -lm -lz -lnx
+LIBS	:= -lpython3.5 -lm -lz -lssl -lcrypto -lnx
 
 #---------------------------------------------------------------------------------
 # list of directories containing libraries, this must be the top level containing
 # include and lib
 #---------------------------------------------------------------------------------
 NXPY := $(CURDIR)/python_build/nxpy3.5.3
-LIBDIRS	:= $(PORTLIBS) $(LIBNX) $(NXPY)
+LIBDIRS	:= $(PORTLIBS) $(LIBNX) $(NXPY) $(CURDIR)/dependencies
 
 
 #---------------------------------------------------------------------------------

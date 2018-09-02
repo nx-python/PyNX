@@ -39,7 +39,7 @@ endif
 
 PYCONFIG_DIR := ../python_config
 
-LIBDIRS	:= $(PORTLIBS) $(LIBNX)
+LIBDIRS	:= $(PORTLIBS) $(LIBNX) $(CURDIR)/../dependencies
 export INCLUDE    :=    $(foreach dir,$(LIBDIRS),-I$(dir)/include) \
             -I$(CURDIR)/$(BUILD)
 CFLAGS    +=    $(INCLUDE) -DSWITCH
@@ -63,6 +63,7 @@ NXVERS := 8ecd6ea46e620cfad4732a9dd7d1ee228309cb1b
 IMGUIFILE := imgui.zip
 IMGUIVERS := 179360f82770850f1af2f03c631d01a9ff839b57
 
+SSL := $(CURDIR)/../dependencies
 
 
 .PHONY: all clean
@@ -111,6 +112,9 @@ soospatchPY: compilePY
 	cp $(PYCONFIG_DIR)/condvar.h $(PYDIR)/Python/
 	cp $(PYCONFIG_DIR)/pylifecycle.c $(PYDIR)/Python/
 	cp $(PYCONFIG_DIR)/ceval_gil.h $(PYDIR)/Python/
+
+	cp $(PYCONFIG_DIR)/_ssl.c $(PYDIR)/Modules/_ssl.c
+
 	cp $(PYDIR)/Modules/posixmodule.c $(PYDIR)/Modules/posixmodule.c_old
 	cat $(PYDIR)/Modules/posixmodule.c_old | $(SED) 's/return utime(path, time)/errno=ENOENT; return -1/g' | $(SED) 's/define LSTAT lstat/define LSTAT stat/' | $(SED) '1s/^/#include <sys\/socket.h>/' | $(SED) 's/access(path->narrow, mode)/1/' | $(SED) 's/\(^[^rt]*time_t atime, mtime;.*\)/return NULL; \1/' | $(SED) 's/\(^[^ri]*int i = (int)umask(mask);.*\)/int i=0; return NULL;/' | $(SED) 's/^\([^#][^#]*#undef HAVE_FSTATVFS.*\)/\#undef HAVE_FSTATVFS \1/' | $(SED) 's/#define HAVE_\(EXECV\|FORK\|GETEGID\|GETEUID\|GETGID\|GETPPID\|GETUID\|KILL\|PIPE\|POPEN\|SYSTEM\|TTYNAME\|SYMLINK\|UTIME_H\|FDATASYNC\).*/#undef HAVE_\1/g' | $(SED) 's/^#define HAVE_\(STATVFS\|SYS_STATVFS_H\|FDATASYNC\|FTIME\|SYMLINK\|EXECV\|FORK\|GETEGID\|GETEUID\|GETGID\|GETPPID\|GETUID\|KILL\|PIPE\|POPEN\|SYSTEM\|TTYNAME\|SYMLINK\|UTIME_H\|FDATASYNC\).*/#undef HAVE_\1/' >$(PYDIR)/Modules/posixmodule.c
 	cp $(PYDIR)/Modules/socketmodule.c $(PYDIR)/Modules/socketmodule.c_old
@@ -135,6 +139,7 @@ patchPY: cloneNX extractedPY
 	cp $(PYDIR)/Modules/Setup.dist $(PYDIR)/Modules/Setup.dist_old
 	cat $(PYDIR)/Modules/Setup.dist_old | $(SED) -e '$$a_nx -I$$(srcdir)/Modules/_nx _nx/_nxmodule.c hashtable.c' | $(SED) 's/^\([^#].* pwdmodule\.c.*\)/#\1/' | $(SED) 's/^#\(array\|cmath\|math\|_struct\|operator\|_random\|_collections\|itertools\|signal\|strop\|unicodedata\|_io\|_csv\|_md5\|_sha\|_sha256\|_sha512\|binascii\|select\|cStringIO\|time\|_functools\|_socket\|datetime\|_bisect\|zlib\)\(.*\)/\1\2/' | $(SED) "s#\\(zlib[^\$$]*\\)\$$(prefix)\\([^\$$]*\\)\$$(exec_prefix)\\(.*\\)#\1$(DEVKITPRO)/portlibs/switch\2$(DEVKITPRO)/portlibs/switch\3#" | $(SED) "s/_tracemalloc/# _tracemalloc/" >$(PYDIR)/Modules/Setup.dist
 	cat imgui-switch-*/setup.txt >> $(PYDIR)/Modules/Setup.dist
+	echo -e "SSL=$(SSL)\n_ssl _ssl.c -DUSE_SSL -I$(SSL)/include -I$(SSL)/include/openssl -L$(SSL)/lib -lssl -lcrypto" >> $(PYDIR)/Modules/Setup.dist
 	cp -r _nx-*/_nx $(PYDIR)/Modules/
 	cp -r imgui-switch-*/dist/modules/* $(PYDIR)/Modules/
 	
