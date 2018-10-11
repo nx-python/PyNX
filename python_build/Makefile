@@ -38,6 +38,7 @@ else
 endif
 
 PYCONFIG_DIR := ../python_config
+PY_EXT_DIR := ../python_exts
 
 LIBDIRS	:= $(PORTLIBS) $(LIBNX)
 export INCLUDE    :=    $(foreach dir,$(LIBDIRS),-I$(dir)/include) \
@@ -135,6 +136,7 @@ patchPY: cloneNX extractedPY
 	cp $(PYDIR)/Modules/Setup.dist $(PYDIR)/Modules/Setup.dist_old
 	cat $(PYDIR)/Modules/Setup.dist_old | $(SED) -e '$$a_nx -I$$(srcdir)/Modules/_nx _nx/_nxmodule.c hashtable.c' | $(SED) 's/^\([^#].* pwdmodule\.c.*\)/#\1/' | $(SED) 's/^#\(array\|cmath\|math\|_struct\|operator\|_random\|_collections\|itertools\|signal\|strop\|unicodedata\|_io\|_csv\|_md5\|_sha\|_sha256\|_sha512\|binascii\|select\|cStringIO\|time\|_functools\|_socket\|datetime\|_bisect\|zlib\)\(.*\)/\1\2/' | $(SED) "s#\\(zlib[^\$$]*\\)\$$(prefix)\\([^\$$]*\\)\$$(exec_prefix)\\(.*\\)#\1$(DEVKITPRO)/portlibs/switch\2$(DEVKITPRO)/portlibs/switch\3#" | $(SED) "s/_tracemalloc/# _tracemalloc/" >$(PYDIR)/Modules/Setup.dist
 	cat imgui-switch-*/setup.txt >> $(PYDIR)/Modules/Setup.dist
+	TOPDIR=$(TOPDIR) PYDIR=$(PYDIR) PY_EXT_DIR=$(PY_EXT_DIR) $(PY_EXT_DIR)/SetupExtensions.sh
 	cp -r _nx-*/_nx $(PYDIR)/Modules/
 	cp -r imgui-switch-*/dist/modules/* $(PYDIR)/Modules/
 	
