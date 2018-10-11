@@ -139,7 +139,7 @@ PyThread_allocate_lock(void)
 
     mutexInit(&(lock->mutex));
 
-    condvarInit(&(lock->cv), &(lock->mutex));
+    condvarInit(&(lock->cv));
 
     dprintf(("PyThread_allocate_lock() -> %p\n", lock));
     return (PyThread_type_lock) lock;
@@ -193,12 +193,12 @@ PyThread_acquire_lock_timed(PyThread_type_lock lock, PY_TIMEOUT_T microseconds,
         success = PY_LOCK_FAILURE;
         while (success == PY_LOCK_FAILURE) {
             if (microseconds > 0) {
-                status = condvarWaitTimeout(&(thelock->cv), ns);
+                status = condvarWaitTimeout(&(thelock->cv),&(thelock->mutex), ns);
                 if (status == 0xEA01) // on timeout
                     break;
             }
             else {
-                status = condvarWait(&(thelock->cv));
+                status = condvarWait(&(thelock->cv),&(thelock->mutex));
             }
 
             if (intr_flag && status == 0 && thelock->locked) {
