@@ -150,14 +150,14 @@ PyMUTEX_UNLOCK(PyMUTEX_T *mut) {
 
 Py_LOCAL_INLINE(int)
 PyCOND_INIT(PyCOND_T *cond, PyMUTEX_T *mut) {
-    condvarInit(cond, mut);
+    condvarInit(cond);
     return 0;
 }
 
 #define PyCOND_FINI(cond)       0
 #define PyCOND_SIGNAL(cond)     condvarWakeOne((cond))
 #define PyCOND_BROADCAST(cond)  condvarWakeAll((cond))
-#define PyCOND_WAIT(cond, mut)  condvarWait((cond))
+#define PyCOND_WAIT(cond, mut)  condvarWait((cond),mut)
 
 /* return 0 for success, 1 on timeout, -1 on error */
 Py_LOCAL_INLINE(int)
@@ -166,7 +166,7 @@ PyCOND_TIMEDWAIT(PyCOND_T *cond, PyMUTEX_T *mut, PY_LONG_LONG us)
     int r;
     u64 ns = us * 1000; // microseconds to nanoseconds
 
-    r = condvarWaitTimeout((cond), ns);
+    r = condvarWaitTimeout((cond),mut, ns);
     if (r == 0xEA01)
         return 1;
     else if (r)
