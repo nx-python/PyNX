@@ -147,6 +147,7 @@ dist: $(BUILD)
 	unzip $(PY_BUILD)/nxpy3.5.3/python.zip -d $(LIBDIR)
 	cp -r $(PY_BUILD)/nx-*/nx $(LIBDIR)
 	cp -r $(PY_BUILD)/imgui-switch-*/dist/python/* $(LIBDIR)
+	cp -r python_exts/py_libs/* $(LIBDIR)
 	cp $(OUTPUT).nro $(DIST_DIR)/
 	cp $(OUTPUT).nacp $(DIST_DIR)/
 	cp main.py $(DIST_DIR)/
