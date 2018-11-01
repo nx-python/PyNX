@@ -2,3 +2,4 @@ python_build/*
 !python_build/Makefile
 build/
 PyNX.*
+.DS_Store
